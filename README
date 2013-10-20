@@ -2,4 +2,8 @@ Hello World!
 
 Packages so far:
 Bootstrap 3.0.0
-Flask v0.10
+
+over pip:
+(pip install Flask)
+(try pip freeze in virtual env)
+Flask==0.10.1
