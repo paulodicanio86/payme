@@ -4,6 +4,10 @@ Packages so far:
 Bootstrap 3.0.0
 
 over pip:
-(pip install Flask)
 (try pip freeze in virtual env)
 Flask==0.10.1
+stripe==1.9.8
+
+I used:
+pip install flask
+sudo pip install --index-url https://code.stripe.com --upgrade stripe
