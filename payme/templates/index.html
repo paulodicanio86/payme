@@ -25,13 +25,12 @@
       </div>
       <p><a class="btn btn-md btn-danger" href="#">Pay this account</a></p>
       <form action="/charge" method="post">
-	<input type="text" class="form-control" id="sum2" placeholder="Sum">
+	<input type="text" class="form-control" name="sum2" id="sum2" placeholder="Sum"/>
 	<script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
 		data-key="{{ key }}"
 		data-description="credit to cash"
 		data-name="credit to cash"
-		data-currency="gbp"
-		data-amount="1234"></script>
+		data-currency="gbp"></script>
       </form>
     </div>
     <div class="col-lg-2">
