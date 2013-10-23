@@ -16,20 +16,24 @@ email = {
 
 
 def send_email(email=email, account=account):
-    # Prepare message
+    """
+    Function to send email.
+    If you want to use Port 465 you have to create an SMTP_SSL object:
+
+    server = smtp.lib.SMTP_SSL(account['server'], account['port'])
+    server.login(account['user'], account['password'])
+    """
     message = 'From: {FROM}\nTo: {TO}\nSubject: {SUBJECT}\n\n{TEXT}'
     message = message.format(FROM=account['from'], 
                              TO=', '.join(email['to']),
                              SUBJECT=email['subject'],
                              TEXT=email['text'])
     try:
-        #server = smtplib.SMTP(SERVER) 
-        server = smtplib.SMTP(account['server'], account['port']) #or port 465 doesn't seem to work!
+        server = smtplib.SMTP(account['server'], account['port'])
         server.ehlo()
         server.starttls()
         server.login(account['user'], account['password'])
         server.sendmail(account['from'], email['to'], message)
-        #server.quit()
         server.close()
         print 'successfully sent the mail'
     except:
