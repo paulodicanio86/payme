@@ -17,7 +17,7 @@ email = {
 
 def send_email(email=email, account=account):
     """
-    Function to send email.
+    Function to send an email.
     If you want to use Port 465 you have to create an SMTP_SSL object:
 
     server = smtp.lib.SMTP_SSL(account['server'], account['port'])

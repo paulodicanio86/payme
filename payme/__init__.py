@@ -6,6 +6,8 @@ stripe_keys = {
     'publishable_key': os.environ['PUBLISHABLE_KEY']
 }
 
+company = 'PayMe'
+
 app = Flask(__name__)
 
 import payme.views
