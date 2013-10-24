@@ -19,11 +19,22 @@ def valid_name(name):
     Checks if account holder name is valid and a string.
     Valid: 1-18 characters long
     """
-    reg_ex = "^[A-Za-z0-9 _-]+$"
+    reg_ex = '^[A-Za-z0-9 _-]+$'
     length = 18
     return (matches_reg_ex(name, reg_ex)
             and len(name)<=length)
 
+def valid_email(email):
+    """
+    Checks if email is valid and a string.
+    """
+    reg_ex = '[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\.[a-zA-Z]{2,4}'
+    if (isinstance(email, basestring)
+        and len(email)==0):
+        return True
+    else:
+        return matches_reg_ex(email, reg_ex)
+    
 def valid_reference(reference):
     """
     Checks if reference is valid and a string.
@@ -49,7 +60,7 @@ def valid_sort_code(sort_code):
     Checks if sort_code is valid and a string.
     Valid: 12-34-56
     """
-    reg_ex = "[0-9][0-9][-][0-9][0-9][-][0-9][0-9]"
+    reg_ex = '[0-9][0-9][-][0-9][0-9][-][0-9][0-9]'
     length = 8
     return (matches_reg_ex(sort_code, reg_ex)
             and len(sort_code)==length)
@@ -59,7 +70,7 @@ def convert_sort_code(sort_code):
     Converts common mistakes in sort code to correct format
     """
     # 12 34.56 -> 12-34-56, 12_34:45 -> 12-34-56, etc.
-    reg_ex = "[0-9][0-9][ _:.-][0-9][0-9][ _:.-][0-9][0-9]"
+    reg_ex = '[0-9][0-9][ _:.-][0-9][0-9][ _:.-][0-9][0-9]'
     length = 8
     if (matches_reg_ex(sort_code, reg_ex)
         and len(sort_code)==length):
@@ -88,14 +99,14 @@ def convert_special_characters(input_string):
     input_string = string.replace(input_string, '\\', '_')
     return input_string
 
-def convert_price(input_string):
-    return string.replace(input_string, ',', '.')
+def convert_price(price):
+    return string.replace(price, ',', '.')
 
 def valid_price(price):
     """
     Valid: 129.99
     """
-    reg_ex = "^[0-9]+[.][0-9][0-9]$"
+    reg_ex = '^[0-9]+[.][0-9][0-9]$'
     return matches_reg_ex(price, reg_ex)
 
 def price_in_pence(price):
@@ -110,7 +121,7 @@ def price_in_pound(price):
     123 -> 1.23
     """
     if is_integer_string(price):
-        return str(int(price) / 100.0)
+        return '{0:.2f}'.format(int(price) / 100.0)
 
         
 
