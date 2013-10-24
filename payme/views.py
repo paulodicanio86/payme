@@ -1,7 +1,6 @@
-import os
-from flask import render_template, request, send_from_directory
-import stripe
-
+import os, stripe
+from flask import (render_template, request, send_from_directory, redirect,
+                   url_for)
 from payme import app, stripe_keys, company
 
 
@@ -26,7 +25,7 @@ def charge():
     # Amount in cents (integer)
     amount = request.form['sum2']
     currency = 'gbp'
-
+    
     # Make the customer
     customer = stripe.Customer.create(
         email='customer@example.com',
@@ -43,15 +42,29 @@ def charge():
             )
     except stripe.CardError, e:
         # The card has been declined.
-        pass
-        return render_template('declined.html',
-                               company=company)
+        return redirect(url_for('declined'))
 
-    amount = str(int(amount) / 100.0) + ' ' + currency.upper() 
+    amount_string = str(int(amount) / 100.0)
+    return redirect(url_for('success', amount=amount_string))
+
+
+#######################################
+# /success/<amount>
+#######################################
+@app.route('/success/<amount>')
+def success(amount, company=company):
     return render_template('charge.html',
                            amount=amount,
                            company=company)
 
+#######################################
+# /declined
+#######################################
+@app.route('/declined')
+def declined():
+    return render_template('declined.html',
+                           company=company)
+    
 
 #######################################
 # Error 404
@@ -69,7 +82,6 @@ def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'ico/favicon.ico',
                                mimetype='image/vnd.microsoft.icon')
-
 
 
 if __name__ == '__main__':
