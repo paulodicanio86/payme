@@ -138,7 +138,9 @@ def charge_post():
             customer=customer.id,
             amount=price_in_pence(values['amount']), # required by stripe in pence
             currency='gbp',
-            description=values['name'] + ' ' + values['reference']
+            description=(values['pay_out'] 
+                         + ' ' + values['name'] 
+                         + ' ' + values['reference'])
             )
     except stripe.CardError, e: # The card has been declined.
         return redirect(url_for('declined'))
@@ -177,11 +179,11 @@ def charge_post():
 
 
     # Function to send emails for:
-    # send an email to email (payer) that he was successfully charged, if provided
+    # if provided, send an email to 'email' (payer), notifying him that he was successfully charged
     #... try:
-    # send an email to email_receiver notyfying him that he gets money, if provided
+    # if provided, send an email to 'email_receiver', notifying him that he will get paid a certain sum 
     #... try:
-    # send an email to me with whome to pay how much money (to receiver, then what my profit is)
+    # send an email to me with whome to pay how much money (to receiver, then what my share is)
     #... try:
     
     return redirect(url_for('success', amount=values['amount']))
