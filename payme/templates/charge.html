@@ -15,6 +15,13 @@
         <input type="hidden" name="email" value="{{ payment.email }}">
         <input type="hidden" name="amount" value="{{ payment.amount }}">
 
+        <input type="hidden" name="fee" value="{{ payment.fee }}">
+        <input type="hidden" name="fee_stripe" value="{{ payment.fee_stripe }}">
+        <input type="hidden" name="pay_out" value="{{ payment.pay_out }}">
+        {% if payment.email_recipient %}
+        <input type="hidden" name="email_recipient" value="{{ payment.email_receiver }}">
+        {% endif %}
+      
         <div class="form-group">
 	  <div class="col-lg-12">
 	    <h3>Summary: </h3>
@@ -22,10 +29,10 @@
 	</div>
         <div class="form-group">
 	  <div class="col-lg-5">
-	    Amount (incl. fee):
+	    Amount:
 	  </div>
 	  <div class="col-lg-7">
-	    <i class="fa fa-gbp"></i> {{ payment.amount }}
+	    <i class="fa fa-gbp"></i> {{ payment.amount_orig }}
 	  </div>
 	</div>
 	<div class="form-group">
@@ -72,6 +79,29 @@
 	  </div>
 	</div>
 	{% endif %}
+	<div class="form-group">
+	  <div class="col-lg-12">
+	    
+	  </div>
+	</div>
+	{% if add_fee %}
+	<div class="form-group">
+	  <div class="col-lg-5">
+	    Fee:
+	  </div>
+	  <div class="col-lg-7">
+	    <i class="fa fa-gbp"></i> {{ payment.fee }}
+	  </div>
+	</div>
+	{% endif %}
+	<div class="form-group">
+	  <div class="col-lg-5">
+	    Chargeable Amount:
+	  </div>
+	  <div class="col-lg-7">
+	    <i class="fa fa-gbp"></i> {{ payment.amount }}
+	  </div>
+	</div>
 	
 	<div class="form-group">
           <div class="col-lg-offset-5 col-lg-5">
@@ -80,7 +110,7 @@
 	    data-key="{{ key }}"
 	    data-description="credit to cash"
 	    data-name="credit to cash"
-	    data-amount = "{{ payment.amount2 }}"
+	    data-amount = "{{ payment.amount_pence }}"
 	    data-currency="gbp">
 	    </script>
           </div>

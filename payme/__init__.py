@@ -8,6 +8,10 @@ stripe_keys = {
 
 company = 'PayMe'
 variable_names = ['name', 'account_number', 'sort_code', 'reference', 'email', 'amount']
+rate = 3.00 # in %
+threshold = 100.00 # in GBP
+card_usage_fee = 0.00 # in GBP
+fixed_fee = 3.00 # in GBP
 
 
 app = Flask(__name__)

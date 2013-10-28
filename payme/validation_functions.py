@@ -1,4 +1,5 @@
 import re, string
+from payme import (rate, card_usage_fee, threshold, fixed_fee)
 
 
 def is_integer_string(input_string):
@@ -105,26 +106,44 @@ def convert_price(price):
     """
     return string.replace(price, ',', '.')
 
-def valid_price(price):
+def valid_fee(value):
     """
+    Validate fee
+    Input/Output are strings
     Valid: 129.99
     """
     reg_ex = '^[0-9]+[.][0-9][0-9]$'
-    return matches_reg_ex(price, reg_ex)
+    return (matches_reg_ex(value, reg_ex)
+            and float(value)>0.00)
+
+def valid_price(value):
+    """
+    Validate price and check that price is >0.50p
+    Input/Output are strings
+    Valid: 129.99
+    """
+    return (valid_fee(value)
+            and float(value)>0.50)
 
 def price_in_pence(price):
     """
+    Input/Output are strings
     129.99 -> 12999
     """
     if valid_price(price):
         return str(int(float(price) * 100.0))
 
+def two_digit_string(value):
+    return '{0:.2f}'.format(value)
+
 def price_in_pound(price):
     """
+    Input/Output are strings
     123 -> 1.23
     """
     if is_integer_string(price):
-        return '{0:.2f}'.format(int(price) / 100.0)
+        return two_digit_string(int(price) / 100.0)
+
 
 #######################################
 # combining the above functions in two
@@ -144,3 +163,34 @@ def validate_entries(valids, values):
     valids['email'] = valid_email(values['email'])
     valids['amount'] = valid_price(values['amount'])
     return valids
+
+def get_fee(value, inverse=False,
+            rate=rate, card_usage_fee=card_usage_fee,
+            threshold=threshold, fixed_fee=fixed_fee):
+    """
+    Input/Output are strings
+    """
+    rate = rate / 100.0 # in decimal
+    value = float(value)
+    fixed_fee = two_digit_string(fixed_fee)
+
+    # if value is below threshold return fixed fee
+    if (value <= threshold
+        and valid_fee(fixed_fee)):
+        return fixed_fee
+
+    # calculate fee
+    fee = value * rate + card_usage_fee
+    if inverse:
+        fee /= (1.0 - rate)
+
+    # return fee as correct string
+    fee = two_digit_string(fee)
+    if valid_fee(fee):
+        return fee
+    
+def get_fee_stripe(value, inverse=False):
+    """
+    Input/Output are strings
+    """
+    return get_fee(value, inverse, 2.4, 0.20, 0.0)
