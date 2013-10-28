@@ -164,6 +164,10 @@ def validate_entries(valids, values):
     valids['amount'] = valid_price(values['amount'])
     return valids
 
+
+#######################################
+# calculating the fee
+#######################################
 def get_fee(value, inverse=False,
             rate=rate, card_usage_fee=card_usage_fee,
             threshold=threshold, fixed_fee=fixed_fee):
