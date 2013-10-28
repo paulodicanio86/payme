@@ -1,6 +1,95 @@
 {% extends "layout.html" %}
 {% block title %} - Pay Money{% endblock %}
 {% block content %}
-  <h3>Thanks, you paid <strong><i class="fa fa-gbp"></i> {{ amount }}</strong>!</h3>
-{% endblock %}
+  <div class="charge details row">
+    <div class="col-lg-2">
+    </div>
+    
+    <div class="col-lg-8 col-xs-12">
+      <form class="form-horizontal" role="form" action="/charge" method="post">
 
+        <input type="hidden" name="name" value="{{ payment.name }}">
+        <input type="hidden" name="account_number" value="{{ payment.account_number }}">
+        <input type="hidden" name="sort_code" value="{{ payment.sort_code }}">
+        <input type="hidden" name="reference" value="{{ payment.reference }}">
+        <input type="hidden" name="email" value="{{ payment.email }}">
+        <input type="hidden" name="amount" value="{{ payment.amount }}">
+
+        <div class="form-group">
+	  <div class="col-lg-12">
+	    <h3>Summary: </h3>
+	  </div>
+	</div>
+        <div class="form-group">
+	  <div class="col-lg-5">
+	    Amount (incl. fee):
+	  </div>
+	  <div class="col-lg-7">
+	    <i class="fa fa-gbp"></i> {{ payment.amount }}
+	  </div>
+	</div>
+	<div class="form-group">
+	  <div class="col-lg-5">
+	    Account Holder Name:
+	  </div>
+	  <div class="col-lg-7">
+	    {{ payment.name }}
+	  </div>
+	</div>
+	<div class="form-group">
+	  <div class="col-lg-5">
+	    Account Number:
+	  </div>
+	  <div class="col-lg-7">
+	    {{ payment.account_number }}
+	  </div>
+	</div>
+	<div class="form-group">
+	  <div class="col-lg-5">
+	    Sort Code:
+	  </div>
+	  <div class="col-lg-7">
+	    {{ payment.sort_code }}
+	  </div>
+	</div>
+	{% if payment.reference!=''%}
+	<div class="form-group">
+	  <div class="col-lg-5">
+	    Reference:
+	  </div>
+	  <div class="col-lg-7">
+	    {{ payment.reference }}
+	  </div>
+	</div>
+	{% endif %}
+	{% if payment.email!=''%}
+	<div class="form-group">
+	  <div class="col-lg-5">
+	    Your E-Mail:
+	  </div>
+	  <div class="col-lg-7">
+	    {{ payment.email }}
+	  </div>
+	</div>
+	{% endif %}
+	
+	<div class="form-group">
+          <div class="col-lg-offset-5 col-lg-5">
+	    <script src="https://checkout.stripe.com/v2/checkout.js"
+	    class="stripe-button"
+	    data-key="{{ key }}"
+	    data-description="credit to cash"
+	    data-name="credit to cash"
+	    data-amount = "{{ payment.amount2 }}"
+	    data-currency="gbp">
+	    </script>
+          </div>
+        </div>
+
+      </form>
+    </div>
+    
+    <div class="col-lg-2">
+    </div>
+  </div>
+{% endblock %}

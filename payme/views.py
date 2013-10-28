@@ -1,8 +1,8 @@
 import os, stripe
 from flask import (render_template, request, send_from_directory, redirect,
                    url_for)
-from payme import app, stripe_keys, company
-from string_functions import *
+from payme import app, stripe_keys, company, variable_names
+from validation_functions import *
 
 
 stripe.api_key = stripe_keys['secret_key']
@@ -43,35 +43,27 @@ def index():
 
 
 #######################################
-# /charge
+# /verify
 #######################################
-@app.route('/charge', methods=['POST'])
-def charge():
+@app.route('/verify', methods=['GET'])
+def verify_get():
+    redirect(url_for('pay')) #or 'index'?
+
+@app.route('/verify', methods=['POST'])
+def verify_post():
     # get the values from the post
-    variables = ['name', 'account_number', 'sort_code', 'reference', 'email', 'amount']
     values = {}
-    for entry in variables:
-        values[entry] = request.form[entry]
     valids = {}
+    # fill, convert and validate entries
+    for entry in variable_names:
+        values[entry] = request.form[entry]
+    values = convert_entries(values)
+    valids = validate_entries(valids, values)
 
-    # convert fields
-    values['name'] = convert_special_characters(values['name'])
-    values['sort_code'] = convert_sort_code(values['sort_code'])
-    values['reference'] = convert_special_characters(values['reference'])
-    values['amount'] = convert_price(values['amount'])
-
-    # validate entries
-    valids['name'] = valid_name(values['name']) 
-    valids['account_number'] = valid_account_number(values['account_number'])
-    valids['sort_code'] = valid_sort_code(values['sort_code'])
-    valids['reference'] = valid_reference(values['reference'])
-    valids['email'] = valid_email(values['email'])
-    valids['amount'] = valid_price(values['amount'])
-
-    # reload if non validated entries exist
+    # reload if non-validated entries exist
     if False in valids.values():
         dic_reload = {}
-        for entry in variables:
+        for entry in variable_names:
             dic_reload[entry] = {'valid': valids[entry],
                                  'value': values[entry]}
         return default_pay(name_dic=dic_reload['name'],
@@ -81,14 +73,61 @@ def charge():
                            email_dic=dic_reload['email'],
                            amount_dic=dic_reload['amount'])
     else:
-        return redirect(url_for('success', amount=values['amount']))
+        return charge(payment=values)
 
- 
+
+#######################################
+# /charge
+#######################################
+def charge(payment):
+
+
+    #HERE, two things:
+    # 1. add fee (2.4% + 0.20p for stripe. make 3gbp <100.00, then 3%?)
+    # check if minimum payment 0.50p
+
+    
+    # For stripe amount label we require the amount in whole pence
+    payment['amount2'] = price_in_pence(payment['amount'])
+
+    return render_template('charge.html',
+                           key=stripe_keys['publishable_key'],
+                           payment=payment,
+                           company=company)
+
+@app.route('/charge', methods=['GET'])
+def charge_get():
+    redirect(url_for('pay')) #or 'index'?
+    
+@app.route('/charge', methods=['POST'])
+def charge_post():
+    # get the values from the post
+    values = {}
+    valids = {}
+    # fill, convert and validate entries
+    for entry in variable_names:
+        values[entry] = request.form[entry]
+    values = convert_entries(values)
+    valids = validate_entries(valids, values)
+
+    # reload if non-validated entries exist
+    if False in valids.values():
+        dic_reload = {}
+        for entry in variable_names:
+            dic_reload[entry] = {'valid': valids[entry],
+                                 'value': values[entry]}
+        return default_pay(name_dic=dic_reload['name'],
+                           account_number_dic=dic_reload['account_number'],
+                           sort_code_dic=dic_reload['sort_code'],
+                           reference_dic=dic_reload['reference'],
+                           email_dic=dic_reload['email'],
+                           amount_dic=dic_reload['amount'])
+
     # Make the customer
     customer = stripe.Customer.create(
-        email=email,
+        email=values['email'],
         card=request.form['stripeToken']
-    )
+        )
 
     # Create the charge on Stripe's servers - this will charge the user's card
     currency = 'gbp'
@@ -98,7 +137,7 @@ def charge():
             customer=customer.id,
             amount=amount,
             currency=currency,
-            description=name + ' ' + reference
+            description=values['name'] + ' ' + values['reference']
             )
     except stripe.CardError, e:
         # The card has been declined.
@@ -106,9 +145,11 @@ def charge():
 
     # add the payment to the database
     namecc = customer.cards.data[0].name    
-
-
-
+    # send an email to customer if provided
+    #... try:
+    # send an email to me with P&L, \n
+    #... try:
+    
     return redirect(url_for('success', amount=values['amount']))
 
 
@@ -117,9 +158,10 @@ def charge():
 #######################################
 @app.route('/success/<amount>')
 def success(amount, company=company):
-    return render_template('charge.html',
+    return render_template('success.html',
                            amount=amount,
                            company=company)
+
 
 #######################################
 # /declined
@@ -128,7 +170,7 @@ def success(amount, company=company):
 def declined():
     return render_template('declined.html',
                            company=company)
-    
+
 
 #######################################
 # Error 404

@@ -1,18 +1,43 @@
 {% extends "layout.html" %}
 {% block title %} - Pay Money{% endblock %}
 {% block content %}
-  <div class="jumbotron">
+  <!--<div class="jumbotron">
     <h1>Convert credit into cash</h1>
     <p class="lead">With this service you can simply use your credit card to deposit cash into any bank account. Why not pay your rent with your credit card and earn those extra airmiles that you are missing out on every month?</p>
-  </div>
+  </div>--!>
 
   <div class="account details row">
     <div class="col-lg-2">
     </div>
     
     <div class="col-lg-8 col-xs-12">
-      <form class="form-horizontal" role="form" action="/charge" method="post">
-	{% if name.valid==True %}
+      <form class="form-horizontal" role="form" action="/verify" method="post">
+      
+        {% if amount.valid==True %}
+	<div class="form-group">
+	{% elif amount.valid==False %}
+	<div class="form-group has-error">
+	{% else %}
+	<div class="form-group">	
+	{% endif %}
+	  {% if amount.hidden %}
+	  <input type="hidden" name="amount" value="{{ amount.value }}">
+	  {% else %}
+	  <label for="amount_id" class="col-lg-5 control-label">Amount</label>
+          <div class="col-lg-5 input-group">
+	    <span class="input-group-addon"><i class="fa fa-gbp"></i></span>
+	    <input type="text" class="form-control" id="amount_id"
+	    name="amount" placeholder="1234.56"
+	    
+	    onkeyup="output_text()" onclick="output_text()"
+            onmouseout="output_text()" onmouseover="output_text()"
+	    
+	    value="{{ amount.value }}" {% if amount.disabled %}disabled{% endif %}>
+	  </div>
+	  {% endif %}
+	</div>
+
+        {% if name.valid==True %}
 	<div class="form-group">
 	{% elif name.valid==False %}
 	<div class="form-group has-error">
@@ -26,6 +51,9 @@
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="name_id"
 	    name="name" placeholder="John Smith" maxlength="18"
+
+	    onmousemove="output_text()"
+
 	    value="{{ name.value }}" {% if name.disabled %}disabled{% endif %}>
 	  </div>
 	  {% endif %}
@@ -44,7 +72,7 @@
 	  <label for="account_number_id" class="col-lg-5 control-label">Account Number</label>
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="account_number_id"
-	    name="account_number" placeholder="12345678" maxlength="8"
+	    name="account_number" placeholder="12345678" maxlength="8" 
 	    value="{{ account_number.value }}" {% if account_number.disabled %}disabled{% endif %}>
 	  </div>
 	  {% endif %}
@@ -63,7 +91,7 @@
 	  <label for="sort_code_id" class="col-lg-5 control-label">Sort Code</label>
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="sort_code_id"
-	    name="sort_code" placeholder="12-34-56" maxlength="8"
+	    name="sort_code" placeholder="12-34-56" maxlength="8" 
 	    value="{{ sort_code.value }}" {% if sort_code.disabled %}disabled{% endif %}>
 	  </div>
 	  {% endif %}
@@ -82,7 +110,7 @@
 	  <label for="reference_id" class="col-lg-5 control-label">Reference</label>
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="reference_id"
-	    name="reference" maxlength="18"
+	    name="reference" maxlength="18" 
 	    value="{{ reference.value }}" {% if reference.disabled %}disabled{% endif %}>
 	  </div>
 	  <label for="reference" class="col-lg-1 control-label">optional</label>
@@ -102,57 +130,37 @@
 	  <label for="email_id" class="col-lg-5 control-label">Your E-Mail</label>
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="email_id"
-	    name="email"
+	    name="email" 
 	    value="{{ email.value }}" {% if email.disabled %}disabled{% endif %}>
 	  </div>
 	  <label for="email" class="col-lg-1 control-label">optional</label>
 	  {% endif %}
 	</div>
 	
-	{% if amount.valid==True %}
-	<div class="form-group">
-	{% elif amount.valid==False %}
-	<div class="form-group has-error">
-	{% else %}
-	<div class="form-group">	
-	{% endif %}
-	  {% if amount.hidden %}
-	  <input type="hidden" name="amount" value="{{ amount.value }}">
-	  {% else %}
-	  <label for="amount_id" class="col-lg-5 control-label">Amount</label>
-          <div class="col-lg-5 input-group">
-	    <span class="input-group-addon"><i class="fa fa-gbp"></i></span>
-	    <input type="text" class="form-control" id="amount_id"
-	    name="amount" placeholder="1234.56"
-	    value="{{ amount.value }}" {% if amount.disabled %}disabled{% endif %}>
-	  </div>
-	  {% endif %}
-	</div>
-	<!--
 	<div class="form-group">
           <div class="col-lg-offset-5 col-lg-5">
-	    <script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
-		data-key="{{ key }}"
-		data-description="credit to cash"
-		data-name="credit to cash"
-		data-currency="gbp"
-                data-amount="5001">
-	    </script>
-          </div>
-        </div>--!>
-	<div class="form-group">
-          <div class="col-lg-offset-5 col-lg-5">
-	    <button type="submit" class="btn btn-success">Test payment</button>
+	    <button type="submit" class="btn btn-success"
+
+	    onMouseOver="output_text()"
+
+	    >Next</button>
           </div>
         </div>
+
+	<!-- JAVASCRIPT HERE - deacticate?>
+	<div class="form-group">
+	  <div class="col-lg-offset-5 col-lg-7">
+	    <p id="amount_output_text"></p>
+	  </div>
+	</div>
+
       </form>
     </div>
+    
     <div class="col-lg-2">
     </div>
   </div>
 
-     
- 
   <!--
       <div class="row marketing">
         <div class="col-lg-6">

@@ -87,7 +87,7 @@ def convert_sort_code(sort_code):
     return sort_code
 
 def convert_special_characters(input_string):
-    input_string = string.replace(input_string, ' ', '_')
+    #input_string = string.replace(input_string, ' ', '_')
     input_string = string.replace(input_string, '"', '_')
     input_string = string.replace(input_string, "'", "_")
     input_string = string.replace(input_string, '#', '_')
@@ -100,6 +100,9 @@ def convert_special_characters(input_string):
     return input_string
 
 def convert_price(price):
+    """
+    Convert ,->.
+    """
     return string.replace(price, ',', '.')
 
 def valid_price(price):
@@ -123,13 +126,21 @@ def price_in_pound(price):
     if is_integer_string(price):
         return '{0:.2f}'.format(int(price) / 100.0)
 
-        
+#######################################
+# combining the above functions in two
+#######################################
+def convert_entries(values):
+    values['name'] = convert_special_characters(values['name'])
+    values['sort_code'] = convert_sort_code(values['sort_code'])
+    values['reference'] = convert_special_characters(values['reference'])
+    values['amount'] = convert_price(values['amount'])
+    return values
 
-
-
-
-
-
-
-
-
+def validate_entries(valids, values):
+    valids['name'] = valid_name(values['name']) 
+    valids['account_number'] = valid_account_number(values['account_number'])
+    valids['sort_code'] = valid_sort_code(values['sort_code'])
+    valids['reference'] = valid_reference(values['reference'])
+    valids['email'] = valid_email(values['email'])
+    valids['amount'] = valid_price(values['amount'])
+    return valids

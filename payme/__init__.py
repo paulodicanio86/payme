@@ -7,6 +7,8 @@ stripe_keys = {
 }
 
 company = 'PayMe'
+variable_names = ['name', 'account_number', 'sort_code', 'reference', 'email', 'amount']
+
 
 app = Flask(__name__)
 
