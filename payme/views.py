@@ -85,19 +85,20 @@ def charge_get():
 
 def charge(payment, add_fee):
     payment['fee'] = get_fee(payment['amount'], add_fee)
-    payment['fee_stripe'] = get_fee_stripe(payment['amount'], add_fee)
 
     # determine whether charge is included or not
     if add_fee:
         payment['amount_orig'] = payment['amount']
         payment['pay_out'] = payment['amount']
         # update chargeable amount with fee:
-        payment['amount'] = two_digit_string(float(payment['amount'])
-                                             + float(payment['fee']))
+        total = two_digit_string(float(payment['amount']) + float(payment['fee']))
+        payment['amount'] = total 
+        payment['fee_stripe'] = get_fee_stripe(total)
     else:
         payment['amount_orig'] = payment['amount']
         payment['pay_out'] = two_digit_string(float(payment['amount'])
                                               - float(payment['fee']))
+        payment['fee_stripe'] = get_fee_stripe(payment['amount'])
 
 
     # For stripe amount label we require the amount in whole pence
@@ -162,16 +163,17 @@ def charge_post():
 
     paid_in = charged - fee_stripe # this is what will reach my account
     profit = paid_in - pay_out # this is what I can keep
-    profit2 = fee - fee_stripe # this should be the same
+    profit2 = fee - fee_stripe # this should be the same - (better, as usually exactly 2 digits)
     check_sum = profit - profit2 # and this should be 0.0
 
-    print (namecc, 
+    print (name_payer, 
            email_payer,
+           name_receiver, 
            email_receiver,
            fee_stripe,
            fee,
            pay_out,
-           credited,
+           charged,
            paid_in,
            profit,
            profit2,

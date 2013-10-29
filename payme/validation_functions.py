@@ -123,7 +123,7 @@ def valid_price(value):
     Valid: 129.99
     """
     return (valid_fee(value)
-            and float(value)>0.50)
+            and float(value)>3.00)
 
 def price_in_pence(price):
     """
