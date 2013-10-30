@@ -2,6 +2,13 @@ import re, string
 from payme import (rate, card_usage_fee, threshold, fixed_fee)
 
 
+def is_number(input):
+    try:
+        float(input)
+        return True
+    except ValueError:
+        return False
+
 def is_integer_string(input_string):
     return (isinstance(input_string, basestring)
             and input_string.isdigit())
@@ -113,7 +120,8 @@ def valid_fee(value):
     Valid: 129.99
     """
     reg_ex = '^[0-9]+[.][0-9][0-9]$'
-    return (matches_reg_ex(value, reg_ex)
+    return (is_number(value)
+            and matches_reg_ex(value, reg_ex)
             and float(value)>0.00)
 
 def valid_price(value):

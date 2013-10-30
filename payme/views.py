@@ -1,8 +1,12 @@
-import os, stripe
+from __future__ import division, print_function, absolute_import
+
+import os
+import stripe
 from flask import (render_template, request, send_from_directory, redirect,
                    url_for)
+
 from payme import app, stripe_keys, company, variable_names
-from validation_functions import *
+from payme.validation_functions import *
 
 
 stripe.api_key = stripe_keys['secret_key']
