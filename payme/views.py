@@ -196,9 +196,58 @@ def charge_post():
 
 
 #######################################
-# /success/<amount>
+# /custom/<account_number>/<sort_code>/<amount>/<name>/
 #######################################
-@app.route('/success/<amount>')
+@app.route('/custom/<account_number>/<sort_code>/<amount>/<name>/')
+def custom(account_number, sort_code, amount, name,
+           reference='', email='',
+           checked=True, company=company):
+    sort_code = convert_sort_code(sort_code)
+
+    if (checked
+        and valid_account_number(account_number)
+        and valid_sort_code(sort_code)
+        and valid_price(amount)
+        and valid_name(name)):
+        return render_template('success.html',
+                               amount=amount,
+                               company=company)
+    else:
+        return 'wrong something'
+
+
+#######################################
+# /custom/<account_number>/<sort_code>/<amount>/<name>/<reference>/
+#######################################
+@app.route('/custom/<account_number>/<sort_code>/<amount>/<name>/<reference>/')
+def custom_reference(account_number, sort_code, amount, name,
+                     reference, company=company):
+    if (valid_reference(reference)):
+        return custom(account_number, sort_code, amount, name,
+                      reference)
+    else:
+        return custom(account_number, sort_code, amount, name,
+                      reference, checked=False)
+
+
+#######################################
+# /custom/<account_number>/<sort_code>/<amount>/<name>/<reference>/<email>/
+#######################################
+@app.route('/custom/<account_number>/<sort_code>/<amount>/<name>/<reference>/<email>/')
+def custom_email(account_number, sort_code, amount, name,
+                 reference, email, company=company):
+    if (valid_email(email)):
+        return custom(account_number, sort_code, amount, name,
+                      reference, email)
+    else:
+        return custom(account_number, sort_code, amount, name,
+                      reference, email, checked=False)
+
+
+#######################################
+# /success/<float:amount>
+#######################################
+@app.route('/success/<float:amount>')
 def success(amount, company=company):
     return render_template('success.html',
                            amount=amount,
