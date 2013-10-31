@@ -27,7 +27,7 @@ def valid_name(name):
     Checks if account holder name is valid and a string.
     Valid: 1-18 characters long
     """
-    reg_ex = '^[A-Za-z0-9 _-]+$'
+    reg_ex = '^[A-Za-z0-9. _-]+$'
     length = 18
     return (matches_reg_ex(name, reg_ex)
             and len(name)<=length)
@@ -178,6 +178,8 @@ def validate_entries(entry, value):
     elif entry=='reference':
         return valid_reference(value)
     elif entry=='email':
+        return valid_email(value)
+    elif entry=='email_account':
         return valid_email(value)
     elif entry=='amount':
         return valid_price(value)

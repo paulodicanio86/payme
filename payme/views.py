@@ -25,15 +25,20 @@ def default_pay(name_dic=default_dic,
                 sort_code_dic=default_dic,
                 reference_dic=default_dic,
                 email_dic=default_dic,
-                amount_dic=default_dic):
+                amount_dic=default_dic,
+                email_account_dic=default_dic,
+                add_fee=True,):
+    
     return render_template('pay.html',
-                           key=stripe_keys['publishable_key'],
+                           key=stripe_keys['publishable_key'],          
                            name=name_dic,
                            account_number=account_number_dic,
                            sort_code=sort_code_dic,
                            reference=reference_dic,
                            email=email_dic,
                            amount=amount_dic,
+                           email_account=email_account_dic,
+                           add_fee=add_fee,
                            company=company)
 
 
@@ -62,27 +67,21 @@ def verify_post():
     read_only = {}
     # fill, convert and validate entries
     for entry in variable_names:
-        read_only[entry] = get_boolean(request.form['readonly_' + entry])
         values[entry] = request.form[entry]
         values[entry] = convert_entries(entry, values[entry])
         valids[entry] = validate_entries(entry, values[entry])
+        read_only[entry] = get_boolean(request.form['read_only_' + entry])
 
     # reload if non-validated entries exist
     if False in valids.values():
-        dic_reload = {}
+        arg_dic = {'add_fee': request.form['add_fee']}
         for entry in variable_names:
-            dic_reload[entry] = {'valid': valids[entry],
-                                 'value': values[entry],
-                                 'read_only': read_only[entry]}
-
-        return default_pay(name_dic=dic_reload['name'],
-                           account_number_dic=dic_reload['account_number'],
-                           sort_code_dic=dic_reload['sort_code'],
-                           reference_dic=dic_reload['reference'],
-                           email_dic=dic_reload['email'],
-                           amount_dic=dic_reload['amount'])
+            arg_dic[entry + '_dic'] = {'valid': valids[entry],
+                                       'value': values[entry],
+                                       'read_only': read_only[entry]}
+        return default_pay(**arg_dic)
     else:
-        return charge(payment=values, add_fee=True)
+        return charge(payment=values, add_fee=get_boolean(request.form['add_fee']))
 
 
 #######################################
@@ -111,10 +110,9 @@ def charge(payment, add_fee):
 
         payment['fee_stripe'] = get_fee_stripe(payment['amount'])
 
-
     # For stripe amount label we require the amount in whole pence
     payment['amount_pence'] = price_in_pence(payment['amount'])
-    
+   
     return render_template('charge.html',
                            key=stripe_keys['publishable_key'],
                            payment=payment,
@@ -125,18 +123,9 @@ def charge(payment, add_fee):
 def charge_post():
     # get the values from the post
     values = {}
-    for entry in (variable_names):
+    for entry in variable_names + ['fee', 'fee_stripe', 'pay_out']:
         values[entry] = request.form[entry]
         
-    # get the extra values from the post
-    # (pay_out, fee and fee_stripe must exist, email_receiver optional)
-    extra_variables = ['fee', 'fee_stripe', 'pay_out', 'email_receiver'] 
-    for entry in extra_variables:
-        if entry in request.form:
-            values[entry] = request.form[entry]
-        else:
-            values[entry] = ''
-
     # make the customer
     customer = stripe.Customer.create(
         email=values['email'],
@@ -161,7 +150,7 @@ def charge_post():
     name_payer = customer.cards.data[0].name
     email_payer = values['email']
     name_receiver = values['name']
-    email_receiver = values['email_receiver']
+    email_receiver = values['email_account']
     account_number = values['account_number']
     sort_code = values['sort_code']
     reference = values['reference']
@@ -209,76 +198,92 @@ def charge_post():
 #######################################
 @app.route('/custom/<account_number>/<sort_code>/<name>/')
 def custom(account_number, sort_code, name, 
-           company=company):
+           amount = '', company=company):
+    local_variable_names = ['account_number', 'sort_code', 'name', 'amount']
+    local_variable_values = [account_number, sort_code, name, amount]
 
-    local_variable_names = ['account_number', 'sort_code', 'name']
-    local_variable_values = [account_number, sort_code, name]
     values = {}
     valids = {}
+    read_only = {}
     # fill, convert and validate entries
     for i, entry in enumerate(local_variable_names):
         values[entry] = local_variable_values[i]
         values[entry] = convert_entries(entry, values[entry])
         valids[entry] = validate_entries(entry, values[entry])
-
-    dic_reload = {}
+        read_only[entry] = get_boolean(valids[entry])
+        
+    arg_dic = {}
     for entry in local_variable_names:
-        dic_reload[entry] = {'valid': valids[entry],
-                             'value': values[entry],
-                             'read_only': valids[entry]}
-    return default_pay(account_number_dic=dic_reload['account_number'],
-                       sort_code_dic=dic_reload['sort_code'],
-                       name_dic=dic_reload['name'])
+        arg_dic[entry + '_dic'] = {'valid': valids[entry],
+                                   'value': values[entry],
+                                   'read_only': read_only[entry]}
+
+    #special modifications
+    arg_dic['amount_dic']['valid'] = True
+    arg_dic['add_fee'] = False
+
+    return default_pay(**arg_dic)
 
 
 #######################################
 # /custom/<account_number>/<sort_code>/<name>/<amount>/
 #######################################
 @app.route('/custom/<account_number>/<sort_code>/<name>/<amount>/')
-def custom_amount(account_number, sort_code, name,
-                  amount, reference='', email='',
+def custom_amount(account_number, sort_code, name, amount, 
+                  reference='', email_account='',
                   checked=True, company=company):
-    sort_code = convert_sort_code(sort_code)
-    amount = convert_price(amount)
 
-    if (checked
-        and valid_account_number(account_number)
-        and valid_sort_code(sort_code)
-        and valid_name(name)
-        and valid_price(amount)):
-        return render_template('success.html',
-                               amount=amount,
-                               company=company)
+    local_variable_names = ['account_number', 'sort_code', 'name', 'amount',
+                            'reference', 'email_account']
+    local_variable_values = [account_number, sort_code, name, amount,
+                             reference, email_account]
+   
+    add_fee = False
+
+    values = {}
+    valids = {}
+    read_only = {}
+    # fill, convert and validate entries
+    for i, entry in enumerate(local_variable_names):
+        values[entry] = local_variable_values[i]
+        values[entry] = convert_entries(entry, values[entry])
+        valids[entry] = validate_entries(entry, values[entry])
+        read_only[entry] = get_boolean(valids[entry])
+
+    # reload if non-validated entries exist
+    if False in (valids.values() + [checked]):
+        arg_dic = {'add_fee': add_fee}
+        for entry in local_variable_names:
+            arg_dic[entry + '_dic'] = {'valid': valids[entry],
+                                       'value': values[entry],
+                                       'read_only': read_only[entry]}
+
+        #special modifications
+        if values['reference']=='':
+            arg_dic['reference_dic']['read_only'] = False
+        return default_pay(**arg_dic)
     else:
-        return 'wrong something'
-
+        return charge(payment=values, add_fee=add_fee)
+    
 
 #######################################
 # /custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/
 #######################################
 @app.route('/custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/')
 def custom_reference(account_number, sort_code, name, amount,
-                     reference, company=company):
-    if (valid_reference(reference)):
-        return custom_amount(account_number, sort_code, name, amount,
-                             reference)
-    else:
-        return custom_amount(account_number, sort_code, name, amount,
-                             reference, checked=False)
+                     reference):
+    return custom_amount(account_number, sort_code, name, amount,
+                         reference)
 
 
 #######################################
-# /custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/<email>/
+# /custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/<email_account>/
 #######################################
-@app.route('/custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/<email>/')
+@app.route('/custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/<email_account>/')
 def custom_email(account_number, sort_code, name, amount,
-                 reference, email, company=company):
-    if (valid_email(email)):
-        return custom_amount(account_number, sort_code, name, amount,
-                             reference, email)
-    else:
-        return custom_amount(account_number, sort_code, name, amount,
-                             reference, email, checked=False)
+                 reference, email_account):
+    return custom_amount(account_number, sort_code, name, amount,
+                         reference, email_account)
 
 
 #######################################

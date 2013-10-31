@@ -33,7 +33,7 @@
             onmouseout="output_text()" onmouseover="output_text()"
 	    
 	    value="{{ amount.value }}" {% if amount.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="readonly_amount" {% if amount.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    <input type="hidden" name="read_only_amount" {% if amount.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  {% endif %}
 	</div>
@@ -56,7 +56,7 @@
 	    onmousemove="output_text()"
 
 	    value="{{ name.value }}" {% if name.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="readonly_name" {% if name.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    <input type="hidden" name="read_only_name" {% if name.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  {% endif %}
 	</div>
@@ -76,7 +76,7 @@
 	    <input type="text" class="form-control" id="account_number_id"
 	    name="account_number" placeholder="12345678" maxlength="8" 
 	    value="{{ account_number.value }}" {% if account_number.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="readonly_account_number" {% if account_number.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    <input type="hidden" name="read_only_account_number" {% if account_number.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  {% endif %}
 	</div>
@@ -96,7 +96,7 @@
 	    <input type="text" class="form-control" id="sort_code_id"
 	    name="sort_code" placeholder="12-34-56" maxlength="8" 
 	    value="{{ sort_code.value }}" {% if sort_code.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="readonly_sort_code" {% if sort_code.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    <input type="hidden" name="read_only_sort_code" {% if sort_code.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  {% endif %}
 	</div>
@@ -116,7 +116,7 @@
 	    <input type="text" class="form-control" id="reference_id"
 	    name="reference" maxlength="18" 
 	    value="{{ reference.value }}" {% if reference.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="readonly_reference" {% if reference.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    <input type="hidden" name="read_only_reference" {% if reference.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  <label for="reference" class="col-lg-1 control-label">optional</label>
 	  {% endif %}
@@ -137,12 +137,16 @@
 	    <input type="text" class="form-control" id="email_id"
 	    name="email" 
 	    value="{{ email.value }}" {% if email.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="readonly_email" {% if email.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    <input type="hidden" name="read_only_email" {% if email.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  <label for="email" class="col-lg-1 control-label">optional</label>
 	  {% endif %}
 	</div>
-	
+
+	<input type="hidden" name="email_account" value="{{ email_account.value }}">
+	<input type="hidden" name="read_only_email_account" {% if email_account.read_only %}value="True"{% else %}value="False"{% endif %}>	
+	<input type="hidden" name="add_fee" value="{{ add_fee }}">
+
 	<div class="form-group">
           <div class="col-lg-offset-5 col-lg-5">
 	    <button type="submit" class="btn btn-success"

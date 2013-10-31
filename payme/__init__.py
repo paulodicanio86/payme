@@ -3,7 +3,7 @@ from flask import Flask
 
 
 company = 'PayMe'
-variable_names = ['name', 'account_number', 'sort_code', 'reference', 'email', 'amount']
+variable_names = ['name', 'account_number', 'sort_code', 'reference', 'email', 'amount', 'email_account']
 rate = 3.00 # in %
 threshold = 100.00 # in GBP
 card_usage_fee = 0.00 # in GBP

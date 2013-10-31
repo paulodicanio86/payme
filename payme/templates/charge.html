@@ -18,8 +18,8 @@
         <input type="hidden" name="fee" value="{{ payment.fee }}">
         <input type="hidden" name="fee_stripe" value="{{ payment.fee_stripe }}">
         <input type="hidden" name="pay_out" value="{{ payment.pay_out }}">
-        {% if payment.email_recipient %}
-        <input type="hidden" name="email_recipient" value="{{ payment.email_receiver }}">
+        {% if payment.email_account %}
+        <input type="hidden" name="email_account" value="{{ payment.email_account }}">
         {% endif %}
       
         <div class="form-group">
