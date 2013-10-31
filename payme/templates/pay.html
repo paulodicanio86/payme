@@ -32,7 +32,8 @@
 	    onkeyup="output_text()" onclick="output_text()"
             onmouseout="output_text()" onmouseover="output_text()"
 	    
-	    value="{{ amount.value }}" {% if amount.disabled %}disabled{% endif %}>
+	    value="{{ amount.value }}" {% if amount.read_only %}readonly{% endif %}>
+	    <input type="hidden" name="readonly_amount" {% if amount.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  {% endif %}
 	</div>
@@ -54,7 +55,8 @@
 
 	    onmousemove="output_text()"
 
-	    value="{{ name.value }}" {% if name.disabled %}disabled{% endif %}>
+	    value="{{ name.value }}" {% if name.read_only %}readonly{% endif %}>
+	    <input type="hidden" name="readonly_name" {% if name.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  {% endif %}
 	</div>
@@ -73,7 +75,8 @@
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="account_number_id"
 	    name="account_number" placeholder="12345678" maxlength="8" 
-	    value="{{ account_number.value }}" {% if account_number.disabled %}disabled{% endif %}>
+	    value="{{ account_number.value }}" {% if account_number.read_only %}readonly{% endif %}>
+	    <input type="hidden" name="readonly_account_number" {% if account_number.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  {% endif %}
 	</div>
@@ -92,7 +95,8 @@
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="sort_code_id"
 	    name="sort_code" placeholder="12-34-56" maxlength="8" 
-	    value="{{ sort_code.value }}" {% if sort_code.disabled %}disabled{% endif %}>
+	    value="{{ sort_code.value }}" {% if sort_code.read_only %}readonly{% endif %}>
+	    <input type="hidden" name="readonly_sort_code" {% if sort_code.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  {% endif %}
 	</div>
@@ -111,7 +115,8 @@
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="reference_id"
 	    name="reference" maxlength="18" 
-	    value="{{ reference.value }}" {% if reference.disabled %}disabled{% endif %}>
+	    value="{{ reference.value }}" {% if reference.read_only %}readonly{% endif %}>
+	    <input type="hidden" name="readonly_reference" {% if reference.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  <label for="reference" class="col-lg-1 control-label">optional</label>
 	  {% endif %}
@@ -131,7 +136,8 @@
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="email_id"
 	    name="email" 
-	    value="{{ email.value }}" {% if email.disabled %}disabled{% endif %}>
+	    value="{{ email.value }}" {% if email.read_only %}readonly{% endif %}>
+	    <input type="hidden" name="readonly_email" {% if email.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  <label for="email" class="col-lg-1 control-label">optional</label>
 	  {% endif %}

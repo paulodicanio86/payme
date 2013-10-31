@@ -156,21 +156,39 @@ def price_in_pound(price):
 #######################################
 # combining the above functions in two
 #######################################
-def convert_entries(values):
-    values['name'] = convert_special_characters(values['name'])
-    values['sort_code'] = convert_sort_code(values['sort_code'])
-    values['reference'] = convert_special_characters(values['reference'])
-    values['amount'] = convert_price(values['amount'])
-    return values
+def convert_entries(entry, value):
+    if entry=='name':
+        return convert_special_characters(value)
+    elif entry=='sort_code':
+        return convert_sort_code(value)
+    elif entry=='reference':
+        return convert_special_characters(value)
+    elif entry=='amount':
+        return convert_price(value)
+    else:
+        return value
 
-def validate_entries(valids, values):
-    valids['name'] = valid_name(values['name']) 
-    valids['account_number'] = valid_account_number(values['account_number'])
-    valids['sort_code'] = valid_sort_code(values['sort_code'])
-    valids['reference'] = valid_reference(values['reference'])
-    valids['email'] = valid_email(values['email'])
-    valids['amount'] = valid_price(values['amount'])
-    return valids
+def validate_entries(entry, value):
+    if entry=='name':
+        return valid_name(value) 
+    elif entry=='account_number':
+        return valid_account_number(value)
+    elif entry=='sort_code':
+        return valid_sort_code(value)
+    elif entry=='reference':
+        return valid_reference(value)
+    elif entry=='email':
+        return valid_email(value)
+    elif entry=='amount':
+        return valid_price(value)
+    else:
+        return False
+
+def get_boolean(value):
+    if str(value)=='True':
+        return True
+    else:
+        return False
 
 
 #######################################

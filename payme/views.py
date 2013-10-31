@@ -17,7 +17,7 @@ stripe.api_key = stripe_keys['secret_key']
 #######################################
 default_dic = {'valid': True,
                'value': '',
-               'disabled': False,
+               'read_only': False,
                'hidden': False}
 
 def default_pay(name_dic=default_dic,
@@ -38,10 +38,11 @@ def default_pay(name_dic=default_dic,
 
 
 #######################################
-# /, /pay
+# /, /pay, /custom/
 #######################################
 @app.route('/')
 @app.route('/pay')
+@app.route('/custom/')
 def index():
     return default_pay()
 
@@ -58,18 +59,22 @@ def verify_post():
     # get the values from the post
     values = {}
     valids = {}
+    read_only = {}
     # fill, convert and validate entries
     for entry in variable_names:
+        read_only[entry] = get_boolean(request.form['readonly_' + entry])
         values[entry] = request.form[entry]
-    values = convert_entries(values)
-    valids = validate_entries(valids, values)
+        values[entry] = convert_entries(entry, values[entry])
+        valids[entry] = validate_entries(entry, values[entry])
 
     # reload if non-validated entries exist
     if False in valids.values():
         dic_reload = {}
         for entry in variable_names:
             dic_reload[entry] = {'valid': valids[entry],
-                                 'value': values[entry]}
+                                 'value': values[entry],
+                                 'read_only': read_only[entry]}
+
         return default_pay(name_dic=dic_reload['name'],
                            account_number_dic=dic_reload['account_number'],
                            sort_code_dic=dic_reload['sort_code'],
@@ -94,6 +99,7 @@ def charge(payment, add_fee):
     if add_fee:
         payment['amount_orig'] = payment['amount']
         payment['pay_out'] = payment['amount']
+
         # update chargeable amount with fee:
         total = two_digit_string(float(payment['amount']) + float(payment['fee']))
         payment['amount'] = total 
@@ -102,6 +108,7 @@ def charge(payment, add_fee):
         payment['amount_orig'] = payment['amount']
         payment['pay_out'] = two_digit_string(float(payment['amount'])
                                               - float(payment['fee']))
+
         payment['fee_stripe'] = get_fee_stripe(payment['amount'])
 
 
@@ -114,7 +121,6 @@ def charge(payment, add_fee):
                            add_fee=add_fee,
                            company=company)
 
-    
 @app.route('/charge', methods=['POST'])
 def charge_post():
     # get the values from the post
@@ -195,20 +201,51 @@ def charge_post():
     return redirect(url_for('success', amount=values['amount']))
 
 
+
+
+
 #######################################
-# /custom/<account_number>/<sort_code>/<amount>/<name>/
+# /custom/<account_number>/<sort_code>/<name>/
 #######################################
-@app.route('/custom/<account_number>/<sort_code>/<amount>/<name>/')
-def custom(account_number, sort_code, amount, name,
-           reference='', email='',
-           checked=True, company=company):
+@app.route('/custom/<account_number>/<sort_code>/<name>/')
+def custom(account_number, sort_code, name, 
+           company=company):
+
+    local_variable_names = ['account_number', 'sort_code', 'name']
+    local_variable_values = [account_number, sort_code, name]
+    values = {}
+    valids = {}
+    # fill, convert and validate entries
+    for i, entry in enumerate(local_variable_names):
+        values[entry] = local_variable_values[i]
+        values[entry] = convert_entries(entry, values[entry])
+        valids[entry] = validate_entries(entry, values[entry])
+
+    dic_reload = {}
+    for entry in local_variable_names:
+        dic_reload[entry] = {'valid': valids[entry],
+                             'value': values[entry],
+                             'read_only': valids[entry]}
+    return default_pay(account_number_dic=dic_reload['account_number'],
+                       sort_code_dic=dic_reload['sort_code'],
+                       name_dic=dic_reload['name'])
+
+
+#######################################
+# /custom/<account_number>/<sort_code>/<name>/<amount>/
+#######################################
+@app.route('/custom/<account_number>/<sort_code>/<name>/<amount>/')
+def custom_amount(account_number, sort_code, name,
+                  amount, reference='', email='',
+                  checked=True, company=company):
     sort_code = convert_sort_code(sort_code)
+    amount = convert_price(amount)
 
     if (checked
         and valid_account_number(account_number)
         and valid_sort_code(sort_code)
-        and valid_price(amount)
-        and valid_name(name)):
+        and valid_name(name)
+        and valid_price(amount)):
         return render_template('success.html',
                                amount=amount,
                                company=company)
@@ -217,31 +254,31 @@ def custom(account_number, sort_code, amount, name,
 
 
 #######################################
-# /custom/<account_number>/<sort_code>/<amount>/<name>/<reference>/
+# /custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/
 #######################################
-@app.route('/custom/<account_number>/<sort_code>/<amount>/<name>/<reference>/')
-def custom_reference(account_number, sort_code, amount, name,
+@app.route('/custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/')
+def custom_reference(account_number, sort_code, name, amount,
                      reference, company=company):
     if (valid_reference(reference)):
-        return custom(account_number, sort_code, amount, name,
-                      reference)
+        return custom_amount(account_number, sort_code, name, amount,
+                             reference)
     else:
-        return custom(account_number, sort_code, amount, name,
-                      reference, checked=False)
+        return custom_amount(account_number, sort_code, name, amount,
+                             reference, checked=False)
 
 
 #######################################
-# /custom/<account_number>/<sort_code>/<amount>/<name>/<reference>/<email>/
+# /custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/<email>/
 #######################################
-@app.route('/custom/<account_number>/<sort_code>/<amount>/<name>/<reference>/<email>/')
-def custom_email(account_number, sort_code, amount, name,
+@app.route('/custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/<email>/')
+def custom_email(account_number, sort_code, name, amount,
                  reference, email, company=company):
     if (valid_email(email)):
-        return custom(account_number, sort_code, amount, name,
-                      reference, email)
+        return custom_amount(account_number, sort_code, name, amount,
+                             reference, email)
     else:
-        return custom(account_number, sort_code, amount, name,
-                      reference, email, checked=False)
+        return custom_amount(account_number, sort_code, name, amount,
+                             reference, email, checked=False)
 
 
 #######################################
