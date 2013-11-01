@@ -199,8 +199,9 @@ def charge_post():
 @app.route('/custom/<account_number>/<sort_code>/<name>/')
 def custom(account_number, sort_code, name, 
            amount = '', company=company):
+
     local_variable_names = ['account_number', 'sort_code', 'name', 'amount']
-    local_variable_values = [account_number, sort_code, name, amount]
+    local_variable_values = [locals()[f] for f in local_variable_names]
 
     values = {}
     valids = {}
@@ -230,13 +231,10 @@ def custom(account_number, sort_code, name,
 #######################################
 @app.route('/custom/<account_number>/<sort_code>/<name>/<amount>/')
 def custom_amount(account_number, sort_code, name, amount, 
-                  reference='', email_account='',
+                  reference='', email_account='', email='',
                   checked=True, company=company):
 
-    local_variable_names = ['account_number', 'sort_code', 'name', 'amount',
-                            'reference', 'email_account']
-    local_variable_values = [account_number, sort_code, name, amount,
-                             reference, email_account]
+    local_variable_values = [locals()[f] for f in variable_names]
    
     add_fee = False
 
@@ -244,7 +242,7 @@ def custom_amount(account_number, sort_code, name, amount,
     valids = {}
     read_only = {}
     # fill, convert and validate entries
-    for i, entry in enumerate(local_variable_names):
+    for i, entry in enumerate(variable_names):
         values[entry] = local_variable_values[i]
         values[entry] = convert_entries(entry, values[entry])
         valids[entry] = validate_entries(entry, values[entry])
@@ -253,7 +251,7 @@ def custom_amount(account_number, sort_code, name, amount,
     # reload if non-validated entries exist
     if False in (valids.values() + [checked]):
         arg_dic = {'add_fee': add_fee}
-        for entry in local_variable_names:
+        for entry in variable_names:
             arg_dic[entry + '_dic'] = {'valid': valids[entry],
                                        'value': values[entry],
                                        'read_only': read_only[entry]}
@@ -261,6 +259,8 @@ def custom_amount(account_number, sort_code, name, amount,
         #special modifications
         if values['reference']=='':
             arg_dic['reference_dic']['read_only'] = False
+        if values['email']=='':
+            arg_dic['email_dic']['read_only'] = False
         return default_pay(**arg_dic)
     else:
         return charge(payment=values, add_fee=add_fee)
