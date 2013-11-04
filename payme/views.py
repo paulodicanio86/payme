@@ -261,6 +261,10 @@ def custom_amount(account_number, sort_code, name, amount,
             arg_dic['reference_dic']['read_only'] = False
         if values['email']=='':
             arg_dic['email_dic']['read_only'] = False
+        if values['amount']=='blank':
+            arg_dic['amount_dic']['read_only'] = False
+            arg_dic['amount_dic']['valid'] = True
+            arg_dic['amount_dic']['value'] = ''
         return default_pay(**arg_dic)
     else:
         return charge(payment=values, add_fee=add_fee)
