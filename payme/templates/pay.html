@@ -38,25 +38,25 @@
 	  {% endif %}
 	</div>
 
-        {% if name.valid==True %}
+        {% if name_receiver.valid==True %}
 	<div class="form-group">
-	{% elif name.valid==False %}
+	{% elif name_receiver.valid==False %}
 	<div class="form-group has-error">
 	{% else %}
 	<div class="form-group">	
 	{% endif %}
-	  {% if name.hidden %}
-	  <input type="hidden" name="name" value="{{ name.value }}">
+	  {% if name_receiver.hidden %}
+	  <input type="hidden" name="name_receiver" value="{{ name_receiver.value }}">
 	  {% else %}
-	  <label for="name_id" class="col-lg-5 control-label">Account Holder Name</label>
+	  <label for="name_receiver_id" class="col-lg-5 control-label">Account Holder Name</label>
           <div class="col-lg-5 input-group">
-	    <input type="text" class="form-control" id="name_id"
-	    name="name" placeholder="John Smith" maxlength="18"
+	    <input type="text" class="form-control" id="name_receiver_id"
+	    name="name_receiver" placeholder="John Smith" maxlength="18"
 
 	    onmousemove="output_text()"
 
-	    value="{{ name.value }}" {% if name.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="read_only_name" {% if name.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    value="{{ name_receiver.value }}" {% if name_receiver.read_only %}readonly{% endif %}>
+	    <input type="hidden" name="read_only_name_receiver" {% if name_receiver.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
 	  {% endif %}
 	</div>
@@ -122,29 +122,29 @@
 	  {% endif %}
 	</div>
 
-	{% if email.valid==True %}
+	{% if email_sender.valid==True %}
 	<div class="form-group">
-	{% elif email.valid==False %}
+	{% elif email_sender.valid==False %}
 	<div class="form-group has-error">
 	{% else %}
 	<div class="form-group">	
 	{% endif %}
-	  {% if email.hidden %}
-	  <input type="hidden" name="email" value="{{ email.value }}">
+	  {% if email_sender.hidden %}
+	  <input type="hidden" name="email_sender" value="{{ email_sender.value }}">
 	  {% else %}
-	  <label for="email_id" class="col-lg-5 control-label">Your E-Mail</label>
+	  <label for="email_sender_id" class="col-lg-5 control-label">Your E-Mail</label>
           <div class="col-lg-5 input-group">
-	    <input type="text" class="form-control" id="email_id"
-	    name="email" 
-	    value="{{ email.value }}" {% if email.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="read_only_email" {% if email.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    <input type="text" class="form-control" id="email_sender_id"
+	    name="email_sender" 
+	    value="{{ email_sender.value }}" {% if email_sender.read_only %}readonly{% endif %}>
+	    <input type="hidden" name="read_only_email_sender" {% if email_sender.read_only %}value="True"{% else %}value="False"{% endif %}>
 	  </div>
-	  <label for="email" class="col-lg-1 control-label">optional</label>
+	  <label for="email_sender" class="col-lg-1 control-label">optional</label>
 	  {% endif %}
 	</div>
 
-	<input type="hidden" name="email_account" value="{{ email_account.value }}">
-	<input type="hidden" name="read_only_email_account" {% if email_account.read_only %}value="True"{% else %}value="False"{% endif %}>	
+	<input type="hidden" name="email_receiver" value="{{ email_receiver.value }}">
+	<input type="hidden" name="read_only_email_receiver" {% if email_receiver.read_only %}value="True"{% else %}value="False"{% endif %}>	
 	<input type="hidden" name="add_fee" value="{{ add_fee }}">
 
 	<div class="form-group">

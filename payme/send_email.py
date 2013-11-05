@@ -33,28 +33,28 @@ def send_email(email=email, email_account=email_account):
         print('failed to send mail')
 
 
-def return_success_text(name_sender, name_account, account_number,
+def return_success_text(name_sender, name_receiver, account_number,
                         sort_code, amount, reference):
     text = '''
     Dear {name_sender},\n
-    You have successfully paid {amount}, which will reach the account of {name_account}
+    You have successfully paid {amount}, which will reach the account of {name_receiver}
     (Account number: {account_number}, Sort Code: {sort_code}, Reference: {reference})
     asap.\n
     Thank you for using our service.
     '''.
     text = text.format(name_sender=name_sender,
                        amount=amount,
-                       name_account=name_account,
+                       name_receiver=name_receiver,
                        account_number=account_number,
                        sort_code=sort_code,
                        reference=reference)
     return text
 
 
-def email_success(email_sender, name_sender, name_account, account_number,
+def email_success(email_sender, name_sender, name_receiver, account_number,
                   sort_code, amount, reference):
     text = return_success_text(name_sender,
-                               name_account,
+                               name_receiver,
                                account_number,
                                sort_code,
                                amount,

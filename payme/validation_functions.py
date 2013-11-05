@@ -1,4 +1,4 @@
-import re, string
+import re, string, datetime
 from payme import (rate, card_usage_fee, threshold, fixed_fee)
 
 
@@ -169,7 +169,7 @@ def convert_entries(entry, value):
         return value
 
 def validate_entries(entry, value):
-    if entry=='name':
+    if entry=='name_receiver':
         return valid_name(value) 
     elif entry=='account_number':
         return valid_account_number(value)
@@ -177,9 +177,9 @@ def validate_entries(entry, value):
         return valid_sort_code(value)
     elif entry=='reference':
         return valid_reference(value)
-    elif entry=='email':
+    elif entry=='email_sender':
         return valid_email(value)
-    elif entry=='email_account':
+    elif entry=='email_receiver':
         return valid_email(value)
     elif entry=='amount':
         return valid_price(value)
@@ -226,3 +226,29 @@ def get_fee_stripe(value, inverse=False):
     Input/Output are strings
     """
     return get_fee(value, inverse, 2.4, 0.20, 0.0)
+
+
+#######################################
+# calculate and add field to payment
+#######################################
+def add_and_modify_entries(values, name_sender, success):
+    # add string field(s)
+    values['name_sender'] = name_sender
+    values['success'] = name_sender
+    values['datetime'] = datetime.datetime.now().isoformat('_')
+    # convert certain fields to floats
+    values['pay_out'] = float(values['pay_out']) # this needs to be paid out to receiver
+    values['charged'] = float(values['amount']) # this is what was charged from cc card
+    values['fee'] = float(values['fee']) # this is my fee
+    values['fee_stripe'] = float(values['fee_stripe']) # this is stripe's fee
+    # calculate new fields
+    values['paid_in'] = values['charged'] - values['fee_stripe'] # this is what will reach my account
+    values['profit'] = values['paid_in'] - values['pay_out'] # this is what I can keep
+    values['profit2'] = values['fee'] - values['fee_stripe'] # this should be the same - (better, as usually exactly 2 digits)
+    values['check_sum'] = values['profit'] - values['profit2'] # and this should be 0.0
+
+    return values
+
+def add_ID(values, ID):
+    values['ID'] = ID
+    return values

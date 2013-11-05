@@ -20,24 +20,24 @@ default_dic = {'valid': True,
                'read_only': False,
                'hidden': False}
 
-def default_pay(name_dic=default_dic,
+def default_pay(name_receiver_dic=default_dic,
                 account_number_dic=default_dic,
                 sort_code_dic=default_dic,
                 reference_dic=default_dic,
-                email_dic=default_dic,
+                email_sender_dic=default_dic,
                 amount_dic=default_dic,
-                email_account_dic=default_dic,
+                email_receiver_dic=default_dic,
                 add_fee=True,):
     
     return render_template('pay.html',
                            key=stripe_keys['publishable_key'],          
-                           name=name_dic,
+                           name_receiver=name_receiver_dic,
                            account_number=account_number_dic,
                            sort_code=sort_code_dic,
                            reference=reference_dic,
-                           email=email_dic,
+                           email_sender=email_sender_dic,
                            amount=amount_dic,
-                           email_account=email_account_dic,
+                           email_receiver=email_receiver_dic,
                            add_fee=add_fee,
                            company=company)
 
@@ -125,115 +125,57 @@ def charge_post():
     values = {}
     for entry in variable_names + ['fee', 'fee_stripe', 'pay_out']:
         values[entry] = request.form[entry]
-        
+
     # make the customer
     customer = stripe.Customer.create(
-        email=values['email'],
+        email=values['email_sender'],
         card=request.form['stripeToken']
         )
 
     # create the charge on stripe's servers - this will charge the user's card
+    success = False
     try:
         charge = stripe.Charge.create(
             customer=customer.id,
             amount=price_in_pence(values['amount']), # required by stripe in pence
             currency='gbp',
             description=(values['pay_out'] 
-                         + ' ' + values['name'] 
+                         + ' ' + values['name_receiver'] 
                          + ' ' + values['reference'])
             )
+        success = True
     except stripe.CardError, e: # The card has been declined.
-        return redirect(url_for('declined'))
-
-
-    # add the payment to the database
-    name_payer = customer.cards.data[0].name
-    email_payer = values['email']
-    name_receiver = values['name']
-    email_receiver = values['email_account']
-    account_number = values['account_number']
-    sort_code = values['sort_code']
-    reference = values['reference']
-
-    pay_out = float(values['pay_out']) # this needs to be paid out to receiver
-    charged = float(values['amount']) # this is what was charged from cc card
-    fee = float(values['fee']) # this is my fee
-    fee_stripe = float(values['fee_stripe']) # this is stripe's fee
-
-    paid_in = charged - fee_stripe # this is what will reach my account
-    profit = paid_in - pay_out # this is what I can keep
-    profit2 = fee - fee_stripe # this should be the same - (better, as usually exactly 2 digits)
-    check_sum = profit - profit2 # and this should be 0.0
-
-    print (name_payer, 
-           email_payer,
-           name_receiver, 
-           email_receiver,
-           fee_stripe,
-           fee,
-           pay_out,
-           charged,
-           paid_in,
-           profit,
-           profit2,
-        check_sum)
-
+        success = False
+        
+    final_payment = add_and_modify_entries(values, customer.cards.data[0].name, success)
+    final_payment = add_ID(final_payment, ID=0)
+    print(final_payment)
 
     # Function to send emails for:
-    # if provided, send an email to 'email' (payer), notifying him that he was successfully charged
+    # if provided, send an email to 'email_sender' (payer), notifying him that he was successfully charged
     #... try:
     # if provided, send an email to 'email_receiver', notifying him that he will get paid a certain sum 
     #... try:
     # send an email to me with whome to pay how much money (to receiver, then what my share is)
     #... try:
+
+    if success:
+        return redirect(url_for('success', amount=final_payment['amount']))
+    else:
+        return redirect(url_for('declined'))
+
+
+#######################################
+# /custom/<account_number>/<sort_code>/<name_receiver>/../../../
+#######################################
+@app.route('/custom/<account_number>/<sort_code>/<name_receiver>/')
+@app.route('/custom/<account_number>/<sort_code>/<name_receiver>/<amount>/')
+@app.route('/custom/<account_number>/<sort_code>/<name_receiver>/<amount>/<reference>/')
+@app.route('/custom/<account_number>/<sort_code>/<name_receiver>/<amount>/<reference>/<email_receiver>/')
+def custom(account_number, sort_code, name_receiver,
+           amount='', reference='', email_receiver='', email_sender='',
+           checked=True, company=company):
     
-    return redirect(url_for('success', amount=values['amount']))
-
-
-
-
-
-#######################################
-# /custom/<account_number>/<sort_code>/<name>/
-#######################################
-@app.route('/custom/<account_number>/<sort_code>/<name>/')
-def custom(account_number, sort_code, name, 
-           amount = '', company=company):
-
-    local_variable_names = ['account_number', 'sort_code', 'name', 'amount']
-    local_variable_values = [locals()[f] for f in local_variable_names]
-
-    values = {}
-    valids = {}
-    read_only = {}
-    # fill, convert and validate entries
-    for i, entry in enumerate(local_variable_names):
-        values[entry] = local_variable_values[i]
-        values[entry] = convert_entries(entry, values[entry])
-        valids[entry] = validate_entries(entry, values[entry])
-        read_only[entry] = get_boolean(valids[entry])
-        
-    arg_dic = {}
-    for entry in local_variable_names:
-        arg_dic[entry + '_dic'] = {'valid': valids[entry],
-                                   'value': values[entry],
-                                   'read_only': read_only[entry]}
-
-    #special modifications
-    arg_dic['amount_dic']['valid'] = True
-    arg_dic['add_fee'] = False
-
-    return default_pay(**arg_dic)
-
-
-#######################################
-# /custom/<account_number>/<sort_code>/<name>/<amount>/
-#######################################
-@app.route('/custom/<account_number>/<sort_code>/<name>/<amount>/')
-def custom_amount(account_number, sort_code, name, amount, 
-                  reference='', email_account='', email='',
-                  checked=True, company=company):
-
     local_variable_values = [locals()[f] for f in variable_names]
    
     add_fee = False
@@ -256,11 +198,14 @@ def custom_amount(account_number, sort_code, name, amount,
                                        'value': values[entry],
                                        'read_only': read_only[entry]}
 
-        #special modifications
+        #special cases
         if values['reference']=='':
             arg_dic['reference_dic']['read_only'] = False
-        if values['email']=='':
-            arg_dic['email_dic']['read_only'] = False
+        if values['email_sender']=='':
+            arg_dic['email_sender_dic']['read_only'] = False
+        if values['amount']=='':
+            arg_dic['amount_dic']['read_only'] = False
+            arg_dic['amount_dic']['valid'] = True
         if values['amount']=='blank':
             arg_dic['amount_dic']['read_only'] = False
             arg_dic['amount_dic']['valid'] = True
@@ -268,26 +213,6 @@ def custom_amount(account_number, sort_code, name, amount,
         return default_pay(**arg_dic)
     else:
         return charge(payment=values, add_fee=add_fee)
-    
-
-#######################################
-# /custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/
-#######################################
-@app.route('/custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/')
-def custom_reference(account_number, sort_code, name, amount,
-                     reference):
-    return custom_amount(account_number, sort_code, name, amount,
-                         reference)
-
-
-#######################################
-# /custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/<email_account>/
-#######################################
-@app.route('/custom/<account_number>/<sort_code>/<name>/<amount>/<reference>/<email_account>/')
-def custom_email(account_number, sort_code, name, amount,
-                 reference, email_account):
-    return custom_amount(account_number, sort_code, name, amount,
-                         reference, email_account)
 
 
 #######################################

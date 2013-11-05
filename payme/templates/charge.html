@@ -8,19 +8,18 @@
     <div class="col-lg-8 col-xs-12">
       <form class="form-horizontal" role="form" action="/charge" method="post">
 
-        <input type="hidden" name="name" value="{{ payment.name }}">
+        <input type="hidden" name="name_receiver" value="{{ payment.name_receiver }}">
         <input type="hidden" name="account_number" value="{{ payment.account_number }}">
         <input type="hidden" name="sort_code" value="{{ payment.sort_code }}">
         <input type="hidden" name="reference" value="{{ payment.reference }}">
-        <input type="hidden" name="email" value="{{ payment.email }}">
+        <input type="hidden" name="email_sender" value="{{ payment.email_sender }}">
         <input type="hidden" name="amount" value="{{ payment.amount }}">
 
+        <input type="hidden" name="email_receiver" value="{{ payment.email_receiver }}">
         <input type="hidden" name="fee" value="{{ payment.fee }}">
         <input type="hidden" name="fee_stripe" value="{{ payment.fee_stripe }}">
         <input type="hidden" name="pay_out" value="{{ payment.pay_out }}">
-        {% if payment.email_account %}
-        <input type="hidden" name="email_account" value="{{ payment.email_account }}">
-        {% endif %}
+
       
         <div class="form-group">
 	  <div class="col-lg-12">
@@ -40,7 +39,7 @@
 	    Account Holder Name:
 	  </div>
 	  <div class="col-lg-7">
-	    {{ payment.name }}
+	    {{ payment.name_receiver }}
 	  </div>
 	</div>
 	<div class="form-group">
@@ -59,7 +58,7 @@
 	    {{ payment.sort_code }}
 	  </div>
 	</div>
-	{% if payment.reference!=''%}
+	{% if payment.reference!='' %}
 	<div class="form-group">
 	  <div class="col-lg-5">
 	    Reference:
@@ -69,13 +68,13 @@
 	  </div>
 	</div>
 	{% endif %}
-	{% if payment.email!=''%}
+	{% if payment.email_sender!='' %}
 	<div class="form-group">
 	  <div class="col-lg-5">
 	    Your E-Mail:
 	  </div>
 	  <div class="col-lg-7">
-	    {{ payment.email }}
+	    {{ payment.email_sender }}
 	  </div>
 	</div>
 	{% endif %}
