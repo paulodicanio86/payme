@@ -234,8 +234,8 @@ def get_fee_stripe(value, inverse=False):
 def add_and_modify_entries(values, name_sender, success):
     # add string field(s)
     values['name_sender'] = name_sender
-    values['success'] = name_sender
-    values['datetime'] = datetime.datetime.now().isoformat('_')
+    values['success'] = success
+    values['datetime'] = datetime.datetime.now().isoformat()
     # convert certain fields to floats
     values['pay_out'] = float(values['pay_out']) # this needs to be paid out to receiver
     values['charged'] = float(values['amount']) # this is what was charged from cc card
