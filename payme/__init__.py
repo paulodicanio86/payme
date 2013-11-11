@@ -4,6 +4,7 @@ from flask import Flask
 
 company = 'PayMe'
 domain = 'www.payme.com'
+company_email = 'paul.schaack2+payment@gmail.com'
 variable_names = ['name_receiver', 'account_number', 'sort_code', 'reference', 'amount', 'email_receiver', 'email_sender']
 threshold = 100.00 # in [GBP]
 card_usage_fee = 0.00 # in [GBP]

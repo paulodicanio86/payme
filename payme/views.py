@@ -7,6 +7,7 @@ from flask import (render_template, request, send_from_directory, redirect,
 
 from payme import app, stripe_keys, company, variable_names
 from payme.validation_functions import *
+from payme.email import send_emails
 
 
 stripe.api_key = stripe_keys['secret_key']
@@ -152,19 +153,13 @@ def charge_post():
         success = False
         name_sender = '[card was declined, no name]'
 
-
+    # add/modify final_payment dictionary
     final_payment = add_and_modify_entries(values, name_sender, success)
     final_payment = add_ID(final_payment, ID=0)
     print(final_payment)
 
-
-    # Function to send emails for:
-    # if provided, send an email to 'email_sender' (payer), notifying him that he was successfully charged
-    #... try:
-    # if provided, send an email to 'email_receiver', notifying him that he will get paid a certain sum 
-    #... try:
-    # send an email to me with whome to pay how much money (to receiver, then what my share is)
-    #... try:
+    # send emails, depending on success/failure
+    send_emails(success, final_payment)
 
     if success:
         return redirect(url_for('success', amount=final_payment['amount']))
