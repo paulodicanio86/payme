@@ -156,7 +156,7 @@ def charge_post():
     # add/modify final_payment dictionary
     final_payment = add_and_modify_entries(values, name_sender, success)
     final_payment = add_ID(final_payment, ID=0)
-    print(final_payment)
+    #print(final_payment)
 
     # send emails, depending on success/failure
     send_emails(success, final_payment)

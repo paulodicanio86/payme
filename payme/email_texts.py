@@ -6,8 +6,8 @@ def return_text_success_receiver(**kwargs):
     Thank you for using our service.
     '''
     by = ''
-    if 'email_sender' in kwargs:
-        by = ' by ' + kwargs.get('email_receiver')
+    if kwargs.get('email_sender', '') != '':
+        by = ' by ' + kwargs.get('email_sender')
     text = text.format(name_receiver=kwargs.get('name_receiver', '[receiver name]'),
                        amount=kwargs.get('amount', '[empty sum]'),
                        by=by,

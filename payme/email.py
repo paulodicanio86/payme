@@ -50,27 +50,33 @@ def send_emails(success, payment):
     function to send emails, depending on success/failure of payment
     '''
     if success:
+        # send email to me
         send_email(company_email,
                    '[make_payment]',
                    'return_details',
                    payment)
-        title = '[' + company + '] Successfull Payment'
+        
+        title = '[' + company + '] Successful Payment'
+        # send email to sender to notify success
         if payment['email_sender'] != '':
             send_email(payment['email_sender'],
                        title,
                        'return_text_success_sender',
                        payment)
+        # send email to receiver to notify success
         if payment['email_receiver'] != '':
             send_email(payment['email_receiver'],
                        title,
                        'return_text_success_receiver',
                        payment)
     else:
+        # send email to me
         send_email(company_email,
                    '[failed_payment]',
                    'return_details',
                    payment)
-        title = '[' + company + '] Unsuccessfull Payment'
+        title = '[' + company + '] Unsuccessful Payment'
+        # send email to sender to notify failure
         if payment['email_sender'] != '':
             send_email(payment['email_sender'],
                        title,
