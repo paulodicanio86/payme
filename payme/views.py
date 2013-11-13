@@ -237,6 +237,24 @@ def declined():
 
 
 #######################################
+# /generate_payment/
+#######################################
+@app.route('/generate_payment/', methods=['GET', 'POST'])
+def generate_payment(company=company):
+    return render_template('generate_payment.html',
+                           company=company)
+
+
+#######################################
+# /about/
+#######################################
+@app.route('/about/')
+def about(company=company):
+    return render_template('about.html',
+                           company=company)
+
+
+#######################################
 # Error 404
 #######################################
 @app.errorhandler(404)
