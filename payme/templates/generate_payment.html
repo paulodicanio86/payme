@@ -8,28 +8,21 @@
     <div class="col-lg-8 col-xs-12">
       {% from "_formhelpers.html" import render_field %}
       <form class="form-horizontal" role="form" action="/generate_payment/" method="post">
-      
+
+      {{ form.csrf_token }}
+
+      {{ render_field(form.amount, class='form-control', placeholder='0.00') }}
       {{ render_field(form.name_receiver, class='form-control', placeholder='John Smith', maxlength='18') }}
-      {{ render_field(form.reference, class='form-control', placeholder='Reference', maxlength='18') }}
-      
+      {{ render_field(form.account_number, class='form-control', placeholder='12345678', maxlength='8') }}
+      {{ render_field(form.sort_code, class='form-control', placeholder='12-34-56', maxlength='8') }}
+      {{ render_field(form.reference, class='form-control', maxlength='18') }}
+      {{ render_field(form.email_receiver, class='form-control') }}
 	
 	<div class="form-group">
           <div class="col-lg-offset-5 col-lg-5">
-	    <button type="submit" class="btn btn-success"
-
-	    onMouseOver="output_text()"
-
-	    >Next</button>
+	    <button type="submit" class="btn btn-success">Next</button>
           </div>
         </div>
-
-	<!-- JAVASCRIPT HERE - deacticate for the time being
-	<div class="form-group">
-	  <div class="col-lg-offset-5 col-lg-7">
-	    <p id="amount_output_text"></p>
-	  </div>
-	</div>
-	-->
 
       </form>
     </div>

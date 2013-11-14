@@ -7,12 +7,17 @@
 
     <label for="{{ field.label.field_id }}" class="col-lg-5 control-label">{{ field.label.text }}</label>
     <div class="col-lg-5 input-group">
+      {% if field.name in ['amount'] %}
+      <span class="input-group-addon"><i class="fa fa-gbp"></i></span>
+      {% endif %}
       {{ field(**kwargs)|safe }}      
     </div>
+    {% if field.name in ['amount', 'reference', 'email_receiver'] %}
+    <label for="{{ field.label.field_id }}" class="col-lg-1 control-label">optional</label>
+    {% endif %}
   </div>
 {% endmacro %}
 
- 
 
 
 

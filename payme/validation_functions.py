@@ -1,4 +1,6 @@
 import re, string, datetime
+from wtforms import ValidationError
+
 from payme import (rate, card_usage_fee, threshold, fixed_fee)
 
 
@@ -191,6 +193,43 @@ def get_boolean(value):
         return True
     else:
         return False
+
+
+#######################################
+# wtforms custom validators
+#######################################
+class Sort_Code(object):
+    def __init__(self, message=None):
+        if not message:
+            message = u'Field must be a valid sort code'
+        self.message = message
+
+    def __call__(self, form, field):
+        value = field.data
+        if not valid_sort_code(value):
+            raise ValidationError(self.message)
+
+class Account_Number(object):
+    def __init__(self, message=None):
+        if not message:
+            message = u'Field must be a valid account number'
+        self.message = message
+
+    def __call__(self, form, field):
+        value = field.data
+        if not valid_account_number(value):
+            raise ValidationError(self.message)
+
+class Amount(object):
+    def __init__(self, message=None):
+        if not message:
+            message = u'Field must be a valid price'
+        self.message = message
+
+    def __call__(self, form, field):
+        value = field.data
+        if not valid_price(value):
+            raise ValidationError(self.message)
 
 
 #######################################
