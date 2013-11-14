@@ -6,9 +6,11 @@
     </div>
 
     <div class="col-lg-8 col-xs-12">
+      {% from "_formhelpers.html" import render_field %}
       <form class="form-horizontal" role="form" action="/generate_payment/" method="post">
-
-
+      
+      {{ render_field(form.name_receiver, class='form-control', placeholder='John Smith', maxlength='18') }}
+      {{ render_field(form.reference, class='form-control', placeholder='Reference', maxlength='18') }}
       
 	
 	<div class="form-group">

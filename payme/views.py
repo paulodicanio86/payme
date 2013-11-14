@@ -8,7 +8,7 @@ from flask import (render_template, request, send_from_directory, redirect,
 from payme import app, stripe_keys, company, variable_names
 from payme.validation_functions import *
 from payme.email import send_emails
-
+from payme.forms import GeneratorForm
 
 stripe.api_key = stripe_keys['secret_key']
 
@@ -241,7 +241,11 @@ def declined():
 #######################################
 @app.route('/generate_payment/', methods=['GET', 'POST'])
 def generate_payment(company=company):
+    form = GeneratorForm()
+    if form.validate_on_submit():
+        return redirect(url_for('success', amount='10.00'))
     return render_template('generate_payment.html',
+                           form=form,
                            company=company)
 
 

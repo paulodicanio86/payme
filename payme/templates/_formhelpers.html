@@ -1,0 +1,21 @@
+{% macro render_field(field) %}
+  {% if field.errors %}
+  <div class="form-group has-error">
+  {% else %}
+  <div class="form-group">	
+  {% endif %}
+
+    <label for="{{ field.label.field_id }}" class="col-lg-5 control-label">{{ field.label.text }}</label>
+    <div class="col-lg-5 input-group">
+      {{ field(**kwargs)|safe }}      
+    </div>
+  </div>
+{% endmacro %}
+
+ 
+
+
+
+
+
+

@@ -28,6 +28,10 @@ stripe_keys = {
 
 app = Flask(__name__)
 
+# set the secret key. keep this really secret:
+app.secret_key = '\xa8\xe2\x0f\xcd\xb4\xfby\xb0\x16\xaa/i\xfam8\x8e\xd7\xd5\xb5\x1e\x10\x93\xee+'
+
+
 import payme.views
 
 
