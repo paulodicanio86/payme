@@ -10,6 +10,7 @@ from payme.validation_functions import *
 from payme.email import send_emails
 from payme.forms import GeneratorForm
 
+
 stripe.api_key = stripe_keys['secret_key']
 
 
@@ -199,20 +200,26 @@ def custom(account_number, sort_code, name_receiver,
             arg_dic[entry + '_dic'] = {'valid': valids[entry],
                                        'value': values[entry],
                                        'read_only': read_only[entry]}
-
+        
         #special cases
-        if values['reference'] in ['', '%20', ' ']:
+        blanks = ['', '%20', ' ', 'empty']
+        if values['reference'] in blanks:
             arg_dic['reference_dic']['read_only'] = False
             arg_dic['reference_dic']['value'] = ''
-        if values['email_sender'] in ['', '%20', ' ']:
+        if values['email_sender'] in blanks:
             arg_dic['email_sender_dic']['read_only'] = False
             arg_dic['email_sender_dic']['value'] = ''
-        if values['amount'] in ['', '%20', ' ', 'blank']:
+        if values['amount'] in blanks:
             arg_dic['amount_dic']['read_only'] = False
             arg_dic['amount_dic']['valid'] = True
             arg_dic['amount_dic']['value'] = ''
+
         return default_pay(**arg_dic)
     else:
+        #special case
+        if values['reference'] == 'empty':
+            values['reference'] = ''
+            
         return charge(payment=values, add_fee=add_fee)
 
 
@@ -263,7 +270,7 @@ def generate_payment(company=company):
         # Add the optional statements in a special way
         def optional_add(rel_link, to_add):
             if to_add == u'':
-                rel_link += '%20/'
+                rel_link += 'empty/'
             else:
                 rel_link += to_add + '/'
             return rel_link
@@ -277,7 +284,7 @@ def generate_payment(company=company):
             while link.endswith(suffix):
                 link = link[:-len(suffix)]
             return link
-        rel_link = strip_end(rel_link, '%20/')
+        rel_link = strip_end(rel_link, 'empty/')
         abs_link = 'http://' + domain + rel_link
         
         return render_template('custom_link.html',
