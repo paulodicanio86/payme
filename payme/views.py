@@ -229,7 +229,7 @@ def custom(account_number, sort_code, name_receiver,
 @app.route('/success/<float:amount>')
 def success(amount, company=company):
     return render_template('success.html',
-                           amount=amount,
+                           amount= two_digit_string(amount),
                            company=company)
 
 
@@ -251,22 +251,23 @@ def generate_payment(company=company):
     form = GeneratorForm()
 
     if form.validate_on_submit():
-        # Form is valid, lets get the data
+        # Form is valid, lets get the data and process them
         name_receiver = form.name_receiver.data
         email_receiver = form.email_receiver.data
         amount = form.amount.data
         amount_paid_out = ''
         if amount != u'':
-            fee = get_fee(amount, False)
-            #Here improve, s.t. the price looks like 150.00 (not 150.0)
-            amount_paid_out = str(float(amount) - float(fee))  
+            fee = get_fee(amount, False) #IS THIS CORRECT, or should it be TRUE? check!
+            amount_paid_out = str(float(amount) - float(fee))
+            amount=two_digit_string(amount)
+            amount_paid_out=two_digit_string(amount_paid_out)
+
            
         # Construct the link paths
         rel_link = '/custom/'
         rel_link += form.account_number.data + '/'
         rel_link += form.sort_code.data + '/'
         rel_link += form.name_receiver.data + '/'
-
         # Add the optional statements in a special way
         def optional_add(rel_link, to_add):
             if to_add == u'':
@@ -277,15 +278,17 @@ def generate_payment(company=company):
 
         rel_link = optional_add(rel_link, form.amount.data)
         rel_link = optional_add(rel_link, form.reference.data)
-        rel_link = optional_add(rel_link, form.email_receiver.data)
-        
+        rel_link = optional_add(rel_link, form.email_receiver.data)      
         # Strip empty cells at the end of link paths
         def strip_end(link, suffix):
             while link.endswith(suffix):
                 link = link[:-len(suffix)]
             return link
+
         rel_link = strip_end(rel_link, 'empty/')
+        rel_link = convert_white_space_in_link(rel_link)
         abs_link = 'http://' + domain + rel_link
+
         
         return render_template('custom_link.html',
                                name_receiver=name_receiver,

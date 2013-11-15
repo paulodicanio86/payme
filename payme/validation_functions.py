@@ -29,7 +29,7 @@ def valid_name(name):
     Checks if account holder name is valid and a string.
     Valid: 1-18 characters long
     """
-    reg_ex = '^[A-Za-z0-9. _-]+$'
+    reg_ex = '^[A-Za-z0-9. _!,&-]+$'
     length = 18
     return (matches_reg_ex(name, reg_ex)
             and len(name)<=length)
@@ -96,8 +96,11 @@ def convert_sort_code(sort_code):
                 + sort_code[4:6])
     return sort_code
 
+def convert_white_space_in_link(input_string):
+    input_string = string.replace(input_string, ' ', '%20')
+    return input_string
+
 def convert_special_characters(input_string):
-    #input_string = string.replace(input_string, ' ', '_')
     input_string = string.replace(input_string, '"', '_')
     input_string = string.replace(input_string, "'", "_")
     input_string = string.replace(input_string, '#', '_')
@@ -144,6 +147,8 @@ def price_in_pence(price):
         return str(int(float(price) * 100.0))
 
 def two_digit_string(value):
+    if type(value) == str or type(value) == unicode:
+        value = float(value)
     return '{0:.2f}'.format(value)
 
 def price_in_pound(price):
