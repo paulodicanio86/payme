@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %} - Receive Money{% endblock %}
+{% block content %}
+  <div class="account details row">
+    <div class="col-lg-12 col-xs-12">
+      <h3>Congratulations, {{name_receiver}}!</h3>
+      <p>Your custom payment link has been created:</br>&nbsp;</p>
+    </div>
+  </div>
+
+  <div class="account details row">
+    <div class="col-lg-12 col-xs-12">
+      <div class="well well-lg">
+	<p class="text-center"><strong>{{ abs_link }}</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="account details row">
+    <div class="col-lg-12 col-xs-12">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Info</h3>
+        </div>
+        <div class="panel-body">
+	   {% if amount_charged != '' %}
+          This payment link will charge <strong><i class="fa
+    fa-gbp"></i> {{ amount_charged }}</strong>. After deducting
+  fees (mainly from your card issuer) you will receive <strong><i
+    class="fa fa-gbp"></i> {{ amount_paid_out }}</strong> in
+  your specified account.
+	  {% else %}
+	  From any payment made with this link we will deduct the fee
+    (mainly from your card issuer) and transfer the remaining amount
+    to your account. 
+	  {% endif %}
+	  
+	  {% if email_receiver != '' %}
+	  </br>&nbsp;</br>
+	  You will receive an email when someone uses your link to
+	  make a payment.
+	  {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="account details row">
+    <p>&nbsp;</p>
+    <div class="col-lg-5 col-xs-12">
+      Do you want to see what it looks like?
+    </div>
+    <div class="col-lg-7 col-xs-12">
+      <a href="{{ rel_link }}" class="btn btn-success" role="button">Go to link <span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div>
+  </div>
+
+
+{% endblock %}

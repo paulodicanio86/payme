@@ -5,7 +5,7 @@ import stripe
 from flask import (render_template, request, send_from_directory, redirect,
                    url_for)
 
-from payme import app, stripe_keys, company, variable_names
+from payme import app, stripe_keys, company, domain, variable_names
 from payme.validation_functions import *
 from payme.email import send_emails
 from payme.forms import GeneratorForm
@@ -241,12 +241,66 @@ def declined():
 #######################################
 @app.route('/generate_payment/', methods=['GET', 'POST'])
 def generate_payment(company=company):
+    # Generate forms for link generation
     form = GeneratorForm()
+
     if form.validate_on_submit():
-        return redirect(url_for('success', amount='10.00'))
-    return render_template('generate_payment.html',
-                           form=form,
-                           company=company)
+        # Form is valid, lets get the data
+        name_receiver = form.name_receiver.data
+        email_receiver = form.email_receiver.data
+        amount = form.amount.data
+        amount_paid_out = ''
+        if amount != u'':
+            fee = get_fee(amount, False)
+            #Here improve, s.t. the price looks like 150.00 (not 150.0)
+            amount_paid_out = str(float(amount) - float(fee))  
+           
+        # Construct the link paths
+        rel_link = '/custom/'
+        rel_link += form.account_number.data + '/'
+        rel_link += form.sort_code.data + '/'
+        rel_link += form.name_receiver.data + '/'
+
+        # Order is important for the following three if statements:
+        if form.amount.data == u'':
+            rel_link += '%20/'
+        else:
+            rel_link += form.amount.data + '/'
+
+        if form.reference.data == u'':
+            rel_link += '%20/'
+        else:
+            rel_link += form.reference.data + '/'
+
+        if form.email_receiver.data == u'':
+            rel_link += '%20/'
+        else:
+            rel_link += form.email_receiver.data + '/'
+
+        # Strip empty cells at the end of link paths
+        def strip_end(link, suffix):
+            while link.endswith(suffix):
+                link = link[:-len(suffix)]
+            return link
+        rel_link = strip_end(rel_link, '%20/')
+        abs_link = 'http://' + domain + rel_link
+        
+        return render_template('custom_link.html',
+                               name_receiver=name_receiver,
+                               amount_charged=amount,
+                               amount_paid_out=amount_paid_out,
+                               email_receiver=email_receiver,
+                               rel_link=rel_link,
+                               abs_link=abs_link,
+                               company=company)
+    else:
+        # Forms not validated, resubmit
+        return render_template('generate_payment.html',
+                               form=form,
+                               company=company)
+
+
+
 
 
 #######################################
