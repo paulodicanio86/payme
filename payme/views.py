@@ -201,14 +201,13 @@ def custom(account_number, sort_code, name_receiver,
                                        'read_only': read_only[entry]}
 
         #special cases
-        if values['reference']=='':
+        if values['reference'] in ['', '%20', ' ']:
             arg_dic['reference_dic']['read_only'] = False
-        if values['email_sender']=='':
+            arg_dic['reference_dic']['value'] = ''
+        if values['email_sender'] in ['', '%20', ' ']:
             arg_dic['email_sender_dic']['read_only'] = False
-        if values['amount']=='':
-            arg_dic['amount_dic']['read_only'] = False
-            arg_dic['amount_dic']['valid'] = True
-        if values['amount']=='blank':
+            arg_dic['email_sender_dic']['value'] = ''
+        if values['amount'] in ['', '%20', ' ', 'blank']:
             arg_dic['amount_dic']['read_only'] = False
             arg_dic['amount_dic']['valid'] = True
             arg_dic['amount_dic']['value'] = ''
@@ -261,22 +260,18 @@ def generate_payment(company=company):
         rel_link += form.sort_code.data + '/'
         rel_link += form.name_receiver.data + '/'
 
-        # Order is important for the following three if statements:
-        if form.amount.data == u'':
-            rel_link += '%20/'
-        else:
-            rel_link += form.amount.data + '/'
+        # Add the optional statements in a special way
+        def optional_add(rel_link, to_add):
+            if to_add == u'':
+                rel_link += '%20/'
+            else:
+                rel_link += to_add + '/'
+            return rel_link
 
-        if form.reference.data == u'':
-            rel_link += '%20/'
-        else:
-            rel_link += form.reference.data + '/'
-
-        if form.email_receiver.data == u'':
-            rel_link += '%20/'
-        else:
-            rel_link += form.email_receiver.data + '/'
-
+        rel_link = optional_add(rel_link, form.amount.data)
+        rel_link = optional_add(rel_link, form.reference.data)
+        rel_link = optional_add(rel_link, form.email_receiver.data)
+        
         # Strip empty cells at the end of link paths
         def strip_end(link, suffix):
             while link.endswith(suffix):

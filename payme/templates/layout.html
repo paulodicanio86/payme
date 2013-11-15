@@ -32,7 +32,8 @@
     <div class="container">
       <div class="header">
 	<ul class="nav nav-pills pull-right">
-	  <li{% if request.path == "/" %} class="active"{% endif %}><a href="/">Pay Money</a></li>
+	  <li{% if request.path == "/" or "/custom/" in request.path
+    or "/verify" in request.path %} class="active"{% endif %}><a href="/">Pay Money</a></li>
 	  <li{% if request.path == "/generate_payment/" %} class="active"{% endif %}><a href="/generate_payment/">Receive Money</a></li>
 	  <li{% if request.path == "/about/" %} class="active"{% endif %}><a href="/about/">About</a></li>
 	</ul>
