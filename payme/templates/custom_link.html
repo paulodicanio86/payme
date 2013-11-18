@@ -47,11 +47,21 @@
 
   <div class="account details row">
     <p>&nbsp;</p>
-    <div class="col-lg-5 col-xs-12">
-      Do you want to see what it looks like?
+     <div class="col-lg-2 col-xs-0">
     </div>
-    <div class="col-lg-7 col-xs-12">
-      <a href="{{ rel_link }}" class="btn btn-success" role="button">Go to link <span class="glyphicon glyphicon-chevron-right"></span></a>
+    <div class="col-lg-5 col-xs-12">
+      <a href="{{ rel_link }}" class="btn btn-success"
+    role="button" target="_blank">Open link in new page <span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div>
+    <div class="col-lg-5 col-xs-12">
+      <a href="
+mailto:?{% if email_receiver != '' %}cc={{
+    email_receiver }}&{% endif %}subject=Payment for
+ {{name_receiver}}&body=Please make a payment for
+ {{name_receiver}}{% if amount_charged != '' %} of {{ amount_charged }} GBP{% endif %}
+ using the following link:%0D%0A%0D%0A{{ abs_link }}%0D%0A%0D%0AThanks.
+      "
+    class="btn btn-success" role="button">Send link via e-mail<span class="glyphicon glyphicon-chevron-right"></span></a>
     </div>
   </div>
 

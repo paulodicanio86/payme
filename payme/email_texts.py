@@ -51,3 +51,4 @@ def return_text_failure_sender(**kwargs):
 def return_details(**kwargs):
     return str(kwargs)
 
+    
