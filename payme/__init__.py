@@ -1,6 +1,7 @@
 import os
 from flask import Flask
-
+from mongokit import Connection
+from payme.db_entry import Payment
 
 company = 'PayMe'
 domain = 'www.payme.com'
@@ -30,13 +31,23 @@ stripe_keys = {
 }
 
 
+# database configuration
+MONGODB_HOST = 'localhost'
+MONGODB_PORT = 27017
+
+
 app = Flask(__name__)
+app.config.from_object(__name__)
 
 
 # set the secret key. keep this really secret:
 app.secret_key = '\xa8\xe2\x0f\xcd\xb4\xfby\xb0\x16\xaa/i\xfam8\x8e\xd7\xd5\xb5\x1e\x10\x93\xee+'
 
 
+# connect to the database
+connection = Connection(app.config['MONGODB_HOST'],
+                        app.config['MONGODB_PORT'])
+connection.register([Payment])
+
+
 import payme.views
-
-

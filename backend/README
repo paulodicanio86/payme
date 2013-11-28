@@ -1,0 +1,20 @@
+VERSION USED: mongodb-osx-x86_64-2.4.8.tgz
+
+mongodb installation:
+http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/
+
+
+then set $PATH to include 'mongod', like in /Users/pschaack/.bash_profile add:
+export PATH=$PATH:/Users/pschaack/payme/backend/mongodb/bin
+
+
+packackes installed in virtualenv (pip install [package]):
+mongokit
+
+
+start mongodb with:
+mongod
+
+
+or with specific database path:
+mongod --dbpath <some alternate directory>

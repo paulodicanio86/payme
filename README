@@ -26,4 +26,12 @@ To install packages when in virtual env, e.g.:
 
 
 To update all packages to what is written in the requirements file:
-'pip upgrade -r requirements.txt'
+'pip install --upgrade -r requirements.txt'
+
+
+To update a certain [package]:
+'pip install --upgrade [package]'
+
+
+To show all outdated packages:
+'pip list -o'  ('pip list --outdated')

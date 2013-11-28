@@ -5,7 +5,7 @@ import stripe
 from flask import (render_template, request, send_from_directory, redirect,
                    url_for)
 
-from payme import app, stripe_keys, company, domain, variable_names
+from payme import app, stripe_keys, company, domain, variable_names, connection
 from payme.validation_functions import *
 from payme.email import send_emails
 from payme.forms import GeneratorForm
@@ -154,10 +154,14 @@ def charge_post():
         success = False
         name_sender = '[card was declined, no name]'
 
-    # add/modify final_payment dictionary
+    # add to and modify final_payment dictionary
     final_payment = add_and_modify_entries(values, name_sender, success)
     final_payment = add_ID(final_payment, ID=0)
-    #print(final_payment)
+    print(final_payment)
+
+    # add final_payment to mongodb
+    collection = connection[company].payments
+    collection.insert(final_payment)
 
     # send emails, depending on success/failure
     send_emails(success, final_payment)
