@@ -275,10 +275,13 @@ def get_fee_stripe(value, inverse=False):
 #######################################
 # calculate and add field to payment
 #######################################
-def add_and_modify_entries(values, name_sender, success):
+def add_and_modify_entries(values, name_sender, email_sender,
+                           success, other_data):
     # add string field(s)
     values['name_sender'] = name_sender
+    values['email_sender'] = email_sender
     values['success'] = success
+    values['other_data'] = other_data
     values['datetime'] = datetime.datetime.now().isoformat()
     # convert certain fields to floats
     values['pay_out'] = float(values['pay_out']) # this needs to be paid out to receiver
@@ -293,6 +296,3 @@ def add_and_modify_entries(values, name_sender, success):
 
     return values
 
-def add_ID(values, ID):
-    values['ID'] = ID
-    return values

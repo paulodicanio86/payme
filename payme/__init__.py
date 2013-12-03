@@ -10,6 +10,8 @@ company_info_email = 'paul.schaack2+payme_info@gmail.com'
 
 
 variable_names = ['name_receiver', 'account_number', 'sort_code', 'reference', 'amount', 'email_receiver', 'email_sender']
+currency = 'gbp' # required for stripe
+
 threshold = 100.00 # in [GBP]
 card_usage_fee = 0.00 # in [GBP]
 rate = 3.00 # in [%], to be charged when amount is over threshold. corresponds to 3.0928% in inverted mode.

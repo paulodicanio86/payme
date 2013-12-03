@@ -1,15 +1,16 @@
 from __future__ import division, print_function, absolute_import
 
-import os
+import os, json
 import stripe
 from flask import (render_template, request, send_from_directory, redirect,
                    url_for)
 
-from payme import app, stripe_keys, company, domain, variable_names, connection
+from payme import (app, stripe_keys, company, domain, variable_names,
+                   connection, currency)
 from payme.validation_functions import *
 from payme.email import send_emails
 from payme.forms import GeneratorForm
-
+from IPython import embed
 
 stripe.api_key = stripe_keys['secret_key']
 
@@ -93,7 +94,7 @@ def verify_post():
 def charge_get():
     return redirect(url_for('index'))
 
-def charge(payment, add_fee):
+def charge(payment, add_fee, currency=currency):
     payment['fee'] = get_fee(payment['amount'], add_fee)
 
     # determine whether charge is included or not
@@ -119,6 +120,7 @@ def charge(payment, add_fee):
                            key=stripe_keys['publishable_key'],
                            payment=payment,
                            add_fee=add_fee,
+                           currency=currency,
                            company=company)
 
 @app.route('/charge', methods=['POST'])
@@ -132,31 +134,38 @@ def charge_post():
     # Connecting with strip and charging if successfull
     success = False
     name_sender = ''
+    email_sender = ''
+    other_data = {}
     try:
         # make the customer
         customer = stripe.Customer.create(
-            email=values['email_sender'],
-            card=request.form['stripeToken']
+            card=request.form['stripeToken'],
+            email = request.form['stripeEmail']
             )
 
         # create the charge on stripe's servers - this will charge the user's card
         charge = stripe.Charge.create(
             customer=customer.id,
             amount=price_in_pence(values['amount']), # required by stripe in pence
-            currency='gbp',
+            currency=currency,
             description=(values['pay_out'] 
                          + ' ' + values['name_receiver'] 
                          + ' ' + values['reference'])
             )
         success = True
         name_sender = customer.cards.data[0].name
+        email_sender = customer.email
+        other_data = customer.cards.data[0].to_dict()
     except stripe.CardError, e: # The card has been declined.
         success = False
         name_sender = '[card was declined, no name]'
+        email_sender = values['email_sender']
+        other_data = {}
 
     # add to and modify final_payment dictionary
-    final_payment = add_and_modify_entries(values, name_sender, success)
-    final_payment = add_ID(final_payment, ID=0)
+    final_payment = add_and_modify_entries(values, name_sender, email_sender,
+                                           success, other_data)
+
     print(final_payment)
 
     # add final_payment to mongodb

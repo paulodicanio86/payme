@@ -20,7 +20,8 @@ class Payment(Document):
         'profit2': float,
         'ID': int,
         'email_receiver': unicode,
-        'charged': float}
+        'charged': float,
+        'other_data': dict}
     required_fields = [
         'pay_out',
         'check_sum',
@@ -40,7 +41,8 @@ class Payment(Document):
         'profit2',
         'ID',
         'email_receiver',
-        'charged'
+        'charged',
+        'other_data'
         ]
 
 
