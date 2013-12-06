@@ -1,4 +1,4 @@
-{% macro render_field(field) %}
+{% macro render_field(field, currency_html) %}
   {% if field.errors %}
   <div class="form-group has-error">
   {% else %}
@@ -8,7 +8,7 @@
     <label for="{{ field.label.field_id }}" class="col-lg-5 control-label">{{ field.label.text }}</label>
     <div class="col-lg-5 input-group">
       {% if field.name in ['amount'] %}
-      <span class="input-group-addon"><i class="fa fa-gbp"></i></span>
+      <span class="input-group-addon">{{ currency_html|safe }}</span>
       {% endif %}
       {{ field(**kwargs)|safe }}      
     </div>

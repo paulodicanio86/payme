@@ -6,7 +6,7 @@ from flask import (render_template, request, send_from_directory, redirect,
                    url_for)
 
 from payme import (app, stripe_keys, company, domain, variable_names,
-                   connection, currency)
+                   connection, currency, currency_html, active)
 from payme.validation_functions import *
 from payme.email import send_emails
 from payme.forms import GeneratorForm
@@ -27,7 +27,6 @@ def default_pay(name_receiver_dic=default_dic,
                 account_number_dic=default_dic,
                 sort_code_dic=default_dic,
                 reference_dic=default_dic,
-                email_sender_dic=default_dic,
                 amount_dic=default_dic,
                 email_receiver_dic=default_dic,
                 add_fee=True,):
@@ -38,10 +37,10 @@ def default_pay(name_receiver_dic=default_dic,
                            account_number=account_number_dic,
                            sort_code=sort_code_dic,
                            reference=reference_dic,
-                           email_sender=email_sender_dic,
                            amount=amount_dic,
                            email_receiver=email_receiver_dic,
                            add_fee=add_fee,
+                           currency_html=currency_html,
                            company=company)
 
 
@@ -52,6 +51,8 @@ def default_pay(name_receiver_dic=default_dic,
 @app.route('/pay')
 @app.route('/custom/')
 def index():
+    if not active:
+        return redirect(url_for('offline'))
     return default_pay()
 
 
@@ -94,7 +95,7 @@ def verify_post():
 def charge_get():
     return redirect(url_for('index'))
 
-def charge(payment, add_fee, currency=currency):
+def charge(payment, add_fee, currency=currency, currency_html=currency_html):
     payment['fee'] = get_fee(payment['amount'], add_fee)
 
     # determine whether charge is included or not
@@ -121,6 +122,7 @@ def charge(payment, add_fee, currency=currency):
                            payment=payment,
                            add_fee=add_fee,
                            currency=currency,
+                           currency_html=currency_html,
                            company=company)
 
 @app.route('/charge', methods=['POST'])
@@ -159,7 +161,7 @@ def charge_post():
     except stripe.CardError, e: # The card has been declined.
         success = False
         name_sender = '[card was declined, no name]'
-        email_sender = values['email_sender']
+        email_sender = ''
         other_data = {}
 
     # add to and modify final_payment dictionary
@@ -189,9 +191,11 @@ def charge_post():
 @app.route('/custom/<account_number>/<sort_code>/<name_receiver>/<amount>/<reference>/')
 @app.route('/custom/<account_number>/<sort_code>/<name_receiver>/<amount>/<reference>/<email_receiver>/')
 def custom(account_number, sort_code, name_receiver,
-           amount='', reference='', email_receiver='', email_sender='',
+           amount='', reference='', email_receiver='',
            checked=True, company=company):
-    
+    if not active:
+        return redirect(url_for('offline'))
+
     local_variable_values = [locals()[f] for f in variable_names]
    
     add_fee = False
@@ -219,9 +223,9 @@ def custom(account_number, sort_code, name_receiver,
         if values['reference'] in blanks:
             arg_dic['reference_dic']['read_only'] = False
             arg_dic['reference_dic']['value'] = ''
-        if values['email_sender'] in blanks:
-            arg_dic['email_sender_dic']['read_only'] = False
-            arg_dic['email_sender_dic']['value'] = ''
+        if values['email_receiver'] in blanks:
+            arg_dic['email_receiver_dic']['read_only'] = False
+            arg_dic['email_receiver_dic']['value'] = ''
         if values['amount'] in blanks:
             arg_dic['amount_dic']['read_only'] = False
             arg_dic['amount_dic']['valid'] = True
@@ -259,7 +263,9 @@ def declined():
 # /generate_payment/
 #######################################
 @app.route('/generate_payment/', methods=['GET', 'POST'])
-def generate_payment(company=company):
+def generate_payment(company=company, currency=currency, currency_html=currency_html):
+    if not active:
+        return redirect(url_for('offline'))
     # Generate forms for link generation
     form = GeneratorForm()
 
@@ -310,15 +316,15 @@ def generate_payment(company=company):
                                email_receiver=email_receiver,
                                rel_link=rel_link,
                                abs_link=abs_link,
+                               currency=currency,
+                               currency_html=currency_html,
                                company=company)
     else:
         # Forms not validated, resubmit
         return render_template('generate_payment.html',
                                form=form,
+                               currency_html=currency_html,
                                company=company)
-
-
-
 
 
 #######################################
@@ -326,7 +332,7 @@ def generate_payment(company=company):
 #######################################
 @app.route('/about/')
 def about(company=company):
-    return render_template('about.html',
+    return render_template('about.html', currency_html=currency_html,
                            company=company)
 
 
@@ -336,6 +342,14 @@ def about(company=company):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html', company=company), 404
+
+
+#######################################
+# Error 404
+#######################################
+@app.route('/offline/')
+def offline():
+    return render_template('offline.html', company=company)
 
 
 #######################################

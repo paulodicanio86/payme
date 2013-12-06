@@ -3,14 +3,18 @@ from flask import Flask
 from mongokit import Connection
 from payme.db_entry import Payment
 
+
+active = True # turn webpage on/off
 company = 'PayMe'
 domain = 'www.payme.com'
 company_email = 'paul.schaack2+payment@gmail.com'
 company_info_email = 'paul.schaack2+payme_info@gmail.com'
 
 
-variable_names = ['name_receiver', 'account_number', 'sort_code', 'reference', 'amount', 'email_receiver', 'email_sender']
+variable_names = ['name_receiver', 'account_number', 'sort_code', 'reference', 'amount', 'email_receiver']
 currency = 'gbp' # required for stripe
+currency_html = '<span class="glyphicon glyphicon-cutlery"></span>' # '<i class="fa fa-gbp"></i>' # shown on pages
+
 
 threshold = 100.00 # in [GBP]
 card_usage_fee = 0.00 # in [GBP]

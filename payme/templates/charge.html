@@ -12,7 +12,6 @@
         <input type="hidden" name="account_number" value="{{ payment.account_number }}">
         <input type="hidden" name="sort_code" value="{{ payment.sort_code }}">
         <input type="hidden" name="reference" value="{{ payment.reference }}">
-        <input type="hidden" name="email_sender" value="{{ payment.email_sender }}">
         <input type="hidden" name="amount" value="{{ payment.amount }}">
 
         <input type="hidden" name="email_receiver" value="{{ payment.email_receiver }}">
@@ -31,7 +30,7 @@
 	    Amount:
 	  </div>
 	  <div class="col-lg-7">
-	    <i class="fa fa-gbp"></i> {{ payment.amount_orig }}
+	    {{ currency_html|safe }} {{ payment.amount_orig }}
 	  </div>
 	</div>
 	<div class="form-group">
@@ -68,13 +67,13 @@
 	  </div>
 	</div>
 	{% endif %}
-	{% if payment.email_sender!='' %}
+	{% if payment.email_receiver!='' %}
 	<div class="form-group">
 	  <div class="col-lg-5">
-	    Your E-Mail:
+	    Account Holder E-Mail:
 	  </div>
 	  <div class="col-lg-7">
-	    {{ payment.email_sender }}
+	    {{ payment.email_receiver }}
 	  </div>
 	</div>
 	{% endif %}
@@ -89,7 +88,7 @@
 	    Fee:
 	  </div>
 	  <div class="col-lg-7">
-	    <i class="fa fa-gbp"></i> {{ payment.fee }}
+	    {{ currency_html|safe }} {{ payment.fee }}
 	  </div>
 	</div>
 	{% endif %}
@@ -98,7 +97,7 @@
 	    Chargeable Amount:
 	  </div>
 	  <div class="col-lg-7">
-	    <i class="fa fa-gbp"></i> {{ payment.amount }}
+	    {{ currency_html|safe }} {{ payment.amount }}
 	  </div>
 	</div>
 	
@@ -111,9 +110,6 @@
 	    data-name="credit to cash"
 	    data-amount = "{{ payment.amount_pence }}"
 	    data-currency="{{ currency }}"
-	    {% if payment.email_sender != '' %}
-	    data-email="{{ payment.email_sender }}"
-	    {% endif %}
 	    data-billing-address=true
 	    >
 	    </script>
