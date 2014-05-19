@@ -5,10 +5,10 @@ from payme.db_entry import Payment
 
 
 active = True # turn webpage on/off
-company = 'PayMe'
-domain = 'www.payme.com'
+company = 'NicerPay'
+domain = 'www.nicerpay.com'
 company_email = 'paul.schaack2+payment@gmail.com'
-company_info_email = 'paul.schaack2+payme_info@gmail.com'
+company_info_email = 'paul.schaack2+nicerpay_info@gmail.com'
 
 
 variable_names = ['name_receiver', 'account_number', 'sort_code', 'reference', 'amount', 'email_receiver']
