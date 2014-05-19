@@ -1,1 +1,1 @@
-rm data/PayMe.*
+rm data/NicerPay.*

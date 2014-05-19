@@ -44,8 +44,3 @@ class Payment(Document):
         'charged',
         'other_data'
         ]
-
-
-
-
-

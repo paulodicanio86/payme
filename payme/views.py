@@ -6,7 +6,7 @@ from flask import (render_template, request, send_from_directory, redirect,
                    url_for)
 
 from payme import (app, stripe_keys, company, domain, variable_names,
-                   connection, currency, currency_html, active)
+                   db_connection, currency, currency_html, active)
 from payme.validation_functions import *
 from payme.email import send_emails
 from payme.forms import GeneratorForm
@@ -171,7 +171,7 @@ def charge_post():
     print(final_payment)
 
     # add final_payment to mongodb
-    collection = connection[company].payments
+    collection = db_connection[company].payments
     collection.insert(final_payment)
 
     # send emails, depending on success/failure
@@ -246,7 +246,8 @@ def custom(account_number, sort_code, name_receiver,
 @app.route('/success/<float:amount>')
 def success(amount, company=company):
     return render_template('success.html',
-                           amount= two_digit_string(amount),
+                           amount=two_digit_string(amount),
+                           currency_html=currency_html,
                            company=company)
 
 
