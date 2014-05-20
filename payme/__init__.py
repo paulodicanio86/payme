@@ -24,11 +24,11 @@ fixed_fee = 3.00 # in [GBP], to be charged when amount is under threshold
 
 
 email_account = {
-    'user': 'paul.schaack2@gmail.com',
+    'user': 'info@nicerpay.com',
     'password': os.environ['EMAIL_PWD'],
-    'server': 'smtp.gmail.com',
-    'port': 587,
-    'from': 'paul.schaack2@gmail.com'
+    'server': 'smtp.zoho.com',
+    'port': 465,
+    'from': 'info@nicerpay.com'
 }
 
 
