@@ -23,7 +23,7 @@ def create_email(email=default_email, email_account=email_account):
                              SUBJECT=email['subject'],
                              TEXT=email['text'])
     try:
-        server = smtplib.SMTP(email_account['server'], email_account['port'])
+        server = smtplib.SMTP_SSL(email_account['server'], email_account['port'])
         server.ehlo()
         server.starttls()
         server.login(email_account['user'], email_account['password'])
