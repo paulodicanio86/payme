@@ -7,8 +7,8 @@ from flask import Flask
 active = True # turn webpage on/off
 company = 'NicerPay'
 domain = 'www.nicerpay.com'
-company_email = 'paul.schaack2+payment@gmail.com'
-company_info_email = 'paul.schaack2+nicerpay_info@gmail.com'
+company_email = 'info@nicerpay.com'
+company_info_email = 'info@nicerpay.com'
 
 
 variable_names = ['name_receiver', 'account_number', 'sort_code', 'reference', 'amount', 'email_receiver']
@@ -24,11 +24,11 @@ fixed_fee = 3.00 # in [GBP], to be charged when amount is under threshold
 
 
 email_account = {
-    'user': 'info@nicerpay.com',
+    'user': company_email,
     'password': os.environ['EMAIL_PWD'],
     'server': 'smtp.zoho.com',
     'port': 465,
-    'from': 'info@nicerpay.com'
+    'from': company_email
 }
 
 

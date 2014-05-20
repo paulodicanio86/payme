@@ -14,7 +14,7 @@ def create_email(email=default_email, email_account=email_account):
     Function to send an email.
     If you want to use Port 465 you have to create an SMTP_SSL object:
 
-    server = smtp.lib.SMTP_SSL(email_account['server'], email_account['port'])
+    server = smtplib.SMTP_SSL(email_account['server'], email_account['port'])
     server.login(email_account['user'], email_account['password'])
     """
     message = 'From: {FROM}\nTo: {TO}\nSubject: {SUBJECT}\n\n{TEXT}'
@@ -23,9 +23,9 @@ def create_email(email=default_email, email_account=email_account):
                              SUBJECT=email['subject'],
                              TEXT=email['text'])
     try:
-        server = smtplib.SMTP_SSL(email_account['server'], email_account['port'])
-        server.ehlo()
-        server.starttls()
+        server = smtplib.SMTP_SSL(email_account['server'], email_account['port']) #gmail only requires .SMTP(
+        #server.ehlo() #gmail requires this
+        #server.starttls() #gmail requires this
         server.login(email_account['user'], email_account['password'])
         server.sendmail(email_account['from'], email['to'], message)
         server.close()
