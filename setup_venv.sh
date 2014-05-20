@@ -1,4 +1,5 @@
 #!/bin/bash
 virtualenv --no-site-packages venv
-pip install -E venv -r requirements.txt
+source venv/bin/activate
+sudo pip install -r requirements.txt
 

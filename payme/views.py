@@ -6,11 +6,10 @@ from flask import (render_template, request, send_from_directory, redirect,
                    url_for)
 
 from payme import (app, stripe_keys, company, domain, variable_names,
-                   db_connection, currency, currency_html, active)
+                   currency, currency_html, active)##, db_connection)
 from payme.validation_functions import *
 from payme.email import send_emails
 from payme.forms import GeneratorForm
-from IPython import embed
 
 stripe.api_key = stripe_keys['secret_key']
 
@@ -171,8 +170,8 @@ def charge_post():
     print(final_payment)
 
     # add final_payment to mongodb
-    collection = db_connection[company].payments
-    collection.insert(final_payment)
+    ##collection = db_connection[company].payments
+    ##collection.insert(final_payment)
 
     # send emails, depending on success/failure
     send_emails(success, final_payment)

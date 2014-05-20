@@ -1,7 +1,7 @@
 import os
 from flask import Flask
-from mongokit import Connection
-from payme.db_entry import Payment
+##from mongokit import Connection
+##from payme.db_entry import Payment
 
 
 active = True # turn webpage on/off
@@ -38,11 +38,6 @@ stripe_keys = {
 }
 
 
-# database configuration
-MONGODB_HOST = 'localhost'
-MONGODB_PORT = 27017
-
-
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -51,10 +46,15 @@ app.config.from_object(__name__)
 app.secret_key = '\xa8\xe2\x0f\xcd\xb4\xfby\xb0\x16\xaa/i\xfam8\x8e\xd7\xd5\xb5\x1e\x10\x93\xee+'
 
 
+# database configuration
+##MONGODB_HOST = 'localhost'
+##MONGODB_PORT = 27017
+
+
 # connect to the database
-db_connection = Connection(app.config['MONGODB_HOST'],
-                        app.config['MONGODB_PORT'])
-db_connection.register([Payment])
+##db_connection = Connection(app.config['MONGODB_HOST'],
+##                        app.config['MONGODB_PORT'])
+##db_connection.register([Payment])
 
 
 import payme.views

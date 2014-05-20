@@ -1,6 +1,7 @@
-from mongokit import Document
+##from mongokit import Document
 
-class Payment(Document):
+##class Payment(Document):
+class Payment():
     structure = {
         'pay_out': float,
         'check_sum': float,
