@@ -5,7 +5,10 @@ MarkupSafe==0.23
 TinyUrl==0.1.0
 WTForms==1.0.5
 Werkzeug==0.9.4
+gunicorn==18.0
 itsdangerous==0.24
+mongokit==0.9.1.1
+pymongo==2.7
 requests==2.3.0
 stripe==1.14.0
 wsgiref==0.1.2
