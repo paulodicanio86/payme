@@ -1,1 +1,1 @@
-web: gunicorn payme:app -c gunicorn.py.ini 
+web: gunicorn payme:app
