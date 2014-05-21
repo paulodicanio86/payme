@@ -1,54 +1,105 @@
+from payme.validation_functions import two_digit_string
+
 def return_text_success_receiver(**kwargs):
-    text = '''Dear {name_receiver},\n
-    You have successfully been paid {amount}{by}, which will reach your account 
-    (Account number: {account_number}, Sort Code: {sort_code}, Reference: {reference})
-    in 7 days.\n
-    Thank you for using our service.
+    text = '''
+Hi {name_receiver},
+You have successfully been paid GBP{pay_out}{by}, which will reach your account 
+(Account number: {account_number}, Sort Code: {sort_code}{reference}) within approximately 7 days.
+
+Thank you for using NicerPay.
     '''
+
     by = ''
     if kwargs.get('email_sender', '') != '':
         by = ' by ' + kwargs.get('email_sender')
+        
+    reference = ''
+    if kwargs.get('reference', '[reference]') != '':
+        reference = ', Reference: ' + kwargs.get('reference', '[reference]')
+        
     text = text.format(name_receiver=kwargs.get('name_receiver', '[receiver name]'),
-                       amount=kwargs.get('amount', '[empty sum]'),
+                       pay_out=two_digit_string(kwargs.get('pay_out', '[empty sum]')),
                        by=by,
                        account_number=kwargs.get('account_number', '[account number]'),
                        sort_code=kwargs.get('sort_code', '[sort code]'),                              
-                       reference=kwargs.get('reference', '[reference]'))
+                       reference=reference)
     return text
 
 
 def return_text_success_sender(**kwargs):
     text = '''
-    You have successfully paid {amount}, which will reach the account of {name_receiver}
-    (Account number: {account_number}, Sort Code: {sort_code}, Reference: {reference})
-    in 7 days.\n
-    Thank you for using our service.
+Hi,
+Your card has been successfully charged GBP{charged}, of which GBP{pay_out} will reach the account of {name_receiver}
+(Account number: {account_number}, Sort Code: {sort_code}{reference}) within approximately 7 days.
+
+Thank you for using NicerPay.
     '''
-    text = text.format(amount=kwargs.get('amount', '[empty sum]'),
+    
+    reference = ''
+    if kwargs.get('reference', '[reference]') != '':
+        reference = ', Reference: ' + kwargs.get('reference', '[reference]')
+        
+    text = text.format(charged=two_digit_string(kwargs.get('charged', '[empty sum]')),
+                       pay_out=two_digit_string(kwargs.get('pay_out', '[empty sum]')),
                        name_receiver=kwargs.get('name_receiver', '[receiver name]'),
                        account_number=kwargs.get('account_number', '[account number]'),
                        sort_code=kwargs.get('sort_code', '[sort code]'),                              
-                       reference=kwargs.get('reference', '[reference]'))
+                       reference=reference)
     return text
 
 
 def return_text_failure_sender(**kwargs):
     text = '''
-    Your payment of {amount} to the account of {name_receiver}
-    (Account number: {account_number}, Sort Code: {sort_code}, Reference: {reference}) has just been declined.\n
-    Please ensure you have entered the correct card information and/or try again with a different card.\n
-    We hope it will work the next time.\n
-    Thank you for using our service.
+Hi,
+Your payment of GBP{pay_out} to the account of {name_receiver}
+(Account number: {account_number}, Sort Code: {sort_code}{reference}) has just been declined.
+Please ensure you have entered the correct card information and/or try again with a different card.
+We hope it will work the next time.
+
+Thank you for using NicerPay.
     '''
-    text = text.format(amount=kwargs.get('amount', '[empty sum]'),
+
+    reference = ''
+    if kwargs.get('reference', '[reference]') != '':
+        reference = ', Reference: ' + kwargs.get('reference', '[reference]')
+    
+    text = text.format(pay_out=two_digit_string(kwargs.get('pay_out', '[empty sum]')),
                        name_receiver=kwargs.get('name_receiver', '[receiver name]'),
                        account_number=kwargs.get('account_number', '[account number]'),
                        sort_code=kwargs.get('sort_code', '[sort code]'),                              
-                       reference=kwargs.get('reference', '[reference]'))
+                       reference=reference)
     return text
 
 
 def return_details(**kwargs):
-    return str(kwargs)
+    text = '''date: {datetime}
+paid-in: {paid_in}
+
+pay-out: {pay_out}
+name: {name_receiver}
+account-number: {account_number}
+sort-ode: {sort_code}
+reference: {reference}
+
+keep: {profit2}
+stripe-fee: {fee_stripe}
+check-sum: {check_sum}
+
+'''
+
+    datetime=kwargs.get('datetime')
+
+    text = text.format(datetime=datetime,
+                       paid_in=two_digit_string(kwargs.get('paid_in')),
+                       pay_out=two_digit_string(kwargs.get('pay_out')),
+                       name_receiver=kwargs.get('name_receiver'),
+                       account_number=kwargs.get('account_number'),
+                       sort_code=kwargs.get('sort_code'),
+                       reference=kwargs.get('reference'),
+                       profit2=kwargs.get('profit2'),
+                       fee_stripe=kwargs.get('fee_stripe'),
+                       check_sum=kwargs.get('check_sum'))
+    
+    return text+str(kwargs)
 
     

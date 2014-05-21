@@ -274,6 +274,7 @@ def generate_payment(company=company, currency=currency, currency_html=currency_
         # Form is valid, lets get the data and process them
         name_receiver = form.name_receiver.data
         email_receiver = form.email_receiver.data
+        reference = form.reference.data
         amount = form.amount.data
         amount_paid_out = ''
         if amount != u'':
@@ -318,6 +319,7 @@ def generate_payment(company=company, currency=currency, currency_html=currency_
                                rel_link=rel_link,
                                abs_link=abs_link,
                                abs_tiny_link=abs_tiny_link,
+                               reference=reference,
                                currency=currency,
                                currency_html=currency_html,
                                company=company)

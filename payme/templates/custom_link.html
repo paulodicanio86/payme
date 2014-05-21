@@ -20,25 +20,31 @@
 
   <div class="account details row">
     <div class="col-lg-12 col-xs-12">
-      <div class="panel panel-primary">
+      <div class="panel panel-info">
         <div class="panel-heading">
-          <h3 class="panel-title">Info</h3>
+          <h3 class="panel-title">What does this link do?</h3>
         </div>
         <div class="panel-body">
+	  You can share this link as many times as you want, it will always work.
+	  </br></br>
 	   {% if amount_charged != '' %}
-          This payment link will charge <strong>{{ currency_html|safe }}{{ amount_charged }}</strong>. After deducting
-  fees (mainly from your card issuer) you will receive <strong>{{ currency_html|safe }}</i>{{ amount_paid_out }}</strong> in
-  your specified account.
+          This payment link will charge {{
+    currency_html|safe}}{{ amount_charged }}. From each
+    payment made with this link we will deduct the fee (mainly from
+    the card issuers) and transfer <strong>{{ currency_html|safe
+    }}</i>{{ amount_paid_out }}</strong> to your specified bank account{% if reference != '' %}
+    (reference: <strong>{{ reference }}</strong>){% endif %}.
 	  {% else %}
-	  From any payment made with this link we will deduct the fee
-    (mainly from your card issuer) and transfer the remaining amount
-    to your account. 
+	  We will <strong>deduct</strong> the fee (mainly from the card issuers) from
+    any payment made with this link. The remaining sum will be
+    transferred to your specified bank account{% if reference != '' %}
+    (reference: <strong>{{ reference }}</strong>){% endif %}.
 	  {% endif %}
 	  
 	  {% if email_receiver != '' %}
-	  </br>&nbsp;</br>
-	  You will receive an email when someone uses your link to
-	  make a payment.
+	  </br></br>
+	  You will receive an e-mail (to: <strong>{{email_receiver}}</strong>) every time someone uses your link
+	  to make a payment.
 	  {% endif %}
         </div>
       </div>
