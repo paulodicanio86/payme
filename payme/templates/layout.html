@@ -43,7 +43,18 @@
       </div>
       <div class="footer">
 	{% block footer %}
-	<p>&copy; {{ company }} 2014</p>
+	<div class="row">
+	  <div class="col-md-4">
+	  <p align="left">
+	  <img src="{{ url_for('static', filename='logos/amex.png') }}" alt="Amex" title="Amex"height="30px" width="49px"/>
+	  <img src="{{ url_for('static', filename='logos/mastercard.png') }}" alt="MasterCard" title="MasterCard"height="30px" width="49px"/>
+	  <img src="{{ url_for('static', filename='logos/visa.png') }}" alt="Visa" title="Visa"height="30px" width="49px"/>
+	  </p>
+	  </div>
+	  <div class="col-md-4 col-md-offset-4">
+	  <p align="right">&copy; {{ company }} 2014</p>
+	  </div>
+	</div>
 	{% endblock %}
       </div>
     </div> <!-- /container -->

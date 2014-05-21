@@ -12,6 +12,8 @@
     <div class="col-lg-12 col-xs-12">
       <div class="well well-lg">
 	<p class="text-center"><strong>{{ abs_link }}</strong></p>
+	<p class="text-center"><i>or even shorter:</i></p>
+	<p class="text-center"><strong>{{ abs_tiny_link }}</strong></p>
       </div>
     </div>
   </div>
@@ -24,8 +26,8 @@
         </div>
         <div class="panel-body">
 	   {% if amount_charged != '' %}
-          This payment link will charge <strong>{{ currency_html|safe }} {{ amount_charged }}</strong>. After deducting
-  fees (mainly from your card issuer) you will receive <strong>{{ currency_html|safe }}</i> {{ amount_paid_out }}</strong> in
+          This payment link will charge <strong>{{ currency_html|safe }}{{ amount_charged }}</strong>. After deducting
+  fees (mainly from your card issuer) you will receive <strong>{{ currency_html|safe }}</i>{{ amount_paid_out }}</strong> in
   your specified account.
 	  {% else %}
 	  From any payment made with this link we will deduct the fee

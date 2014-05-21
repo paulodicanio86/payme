@@ -39,7 +39,7 @@
 	  {% if name_receiver.hidden %}
 	  <input type="hidden" name="name_receiver" value="{{ name_receiver.value }}">
 	  {% else %}
-	  <label for="name_receiver_id" class="col-lg-5 control-label">Account Holder Name</label>
+	  <label for="name_receiver_id" class="col-lg-5 control-label">Receiver's Name</label>
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="name_receiver_id"
 	    name="name_receiver" placeholder="John Smith" maxlength="18"
@@ -60,7 +60,7 @@
 	  {% if email_receiver.hidden %}
 	  <input type="hidden" name="email_receiver" value="{{ email_receiver.value }}">
 	  {% else %}
-	  <label for="email_receiver_id" class="col-lg-5 control-label">Account Holder E-Mail</label>
+	  <label for="email_receiver_id" class="col-lg-5 control-label">Receiver's E-Mail</label>
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="email_receiver_id"
 	    name="email_receiver" 
@@ -81,7 +81,8 @@
 	  {% if account_number.hidden %}
 	  <input type="hidden" name="account_number" value="{{ account_number.value }}">
 	  {% else %}
-	  <label for="account_number_id" class="col-lg-5 control-label">Account Number</label>
+	  <label for="account_number_id" class="col-lg-5
+	control-label">Receiver's Account No.</label>
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="account_number_id"
 	    name="account_number" placeholder="12345678" maxlength="8" 
@@ -101,7 +102,8 @@
 	  {% if sort_code.hidden %}
 	  <input type="hidden" name="sort_code" value="{{ sort_code.value }}">
 	  {% else %}
-	  <label for="sort_code_id" class="col-lg-5 control-label">Sort Code</label>
+	  <label for="sort_code_id" class="col-lg-5
+	control-label">Receiver's Sort Code</label>
           <div class="col-lg-5 input-group">
 	    <input type="text" class="form-control" id="sort_code_id"
 	    name="sort_code" placeholder="12-34-56" maxlength="8" 

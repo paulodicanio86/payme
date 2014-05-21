@@ -14,7 +14,8 @@ company_info_email = 'info@nicerpay.com'
 variable_names = ['name_receiver', 'account_number', 'sort_code', 'reference', 'amount', 'email_receiver']
 currency = 'gbp' # required for stripe
 currency_html = '<span class="glyphicon glyphicon-cutlery"></span>' # knife and fork symbol
-currency_html = '<i class="fa fa-gbp"></i>' # Pound symbol
+currency_html = '<i class="fa fa-gbp"></i>' # Fancy pound symbol
+currency_html = '&pound;' # HTML pound symbol
 
 
 threshold = 100.00 # in [GBP], threshold for minimum charge (fixed_fee)

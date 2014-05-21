@@ -30,7 +30,7 @@
 	    Amount:
 	  </div>
 	  <div class="col-lg-7">
-	    {{ currency_html|safe }} {{ payment.amount_orig }}
+	    {{ currency_html|safe }}{{ payment.amount_orig }}
 	  </div>
 	</div>
 	<div class="form-group">
@@ -88,7 +88,7 @@
 	    Fee:
 	  </div>
 	  <div class="col-lg-7">
-	    {{ currency_html|safe }} {{ payment.fee }}
+	    {{ currency_html|safe }}{{ payment.fee }}
 	  </div>
 	</div>
 	{% endif %}
@@ -97,7 +97,7 @@
 	    Chargeable Amount:
 	  </div>
 	  <div class="col-lg-7">
-	    {{ currency_html|safe }} {{ payment.amount }}
+	    {{ currency_html|safe }}{{ payment.amount }}
 	  </div>
 	</div>
 	
@@ -106,8 +106,8 @@
 	    <script src="https://checkout.stripe.com/checkout.js"
 	    class="stripe-button"
 	    data-key="{{ key }}"
-	    data-description="credit to cash"
-	    data-name="credit to cash"
+	    data-description="Credit to Money"
+	    data-name="NicerPay"
 	    data-amount = "{{ payment.amount_pence }}"
 	    data-currency="{{ currency }}"
 	    data-billing-address=true

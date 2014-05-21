@@ -2,6 +2,7 @@ from __future__ import division, print_function, absolute_import
 
 import os, json
 import stripe
+import tinyurl
 from flask import (render_template, request, send_from_directory, redirect,
                    url_for)
 
@@ -306,8 +307,8 @@ def generate_payment(company=company, currency=currency, currency_html=currency_
 
         rel_link = strip_end(rel_link, 'empty/')
         rel_link = convert_white_space_in_link(rel_link)
-        abs_link = 'http://' + domain + rel_link
-
+        abs_link = domain + rel_link
+        abs_tiny_link = tinyurl.create_one('http://' + abs_link)
         
         return render_template('custom_link.html',
                                name_receiver=name_receiver,
@@ -316,6 +317,7 @@ def generate_payment(company=company, currency=currency, currency_html=currency_
                                email_receiver=email_receiver,
                                rel_link=rel_link,
                                abs_link=abs_link,
+                               abs_tiny_link=abs_tiny_link,
                                currency=currency,
                                currency_html=currency_html,
                                company=company)
@@ -332,7 +334,8 @@ def generate_payment(company=company, currency=currency, currency_html=currency_
 #######################################
 @app.route('/about/')
 def about(company=company):
-    return render_template('about.html', currency_html=currency_html,
+    return render_template('about.html',
+                           currency_html=currency_html,
                            company=company)
 
 
@@ -345,7 +348,7 @@ def page_not_found(e):
 
 
 #######################################
-# Error 404
+# Offline
 #######################################
 @app.route('/offline/')
 def offline():
