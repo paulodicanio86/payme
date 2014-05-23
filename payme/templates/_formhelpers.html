@@ -1,21 +1,22 @@
 {% macro render_field(field, currency_html) %}
+<div class="{{ field.label.field_id }} row">
   {% if field.errors %}
   <div class="form-group has-error">
   {% else %}
   <div class="form-group">	
   {% endif %}
-
-    <label for="{{ field.label.field_id }}" class="col-lg-5 control-label">{{ field.label.text }}</label>
-    <div class="col-lg-5 input-group">
+    <label for="{{ field.label.field_id }}" class="col-lg-5 col-xs-12 control-label">{{ field.label.text }}</label>
+    <div class="col-lg-5 col-xs-12 input-group">
       {% if field.name in ['amount'] %}
       <span class="input-group-addon">{{ currency_html|safe }}</span>
       {% endif %}
       {{ field(**kwargs)|safe }}      
     </div>
     {% if field.name in ['amount', 'reference', 'email_receiver'] %}
-    <label for="{{ field.label.field_id }}" class="col-lg-1 control-label">optional</label>
+    <label for="{{ field.label.field_id }}" class="col-lg-2 col-xs-12 control-label">optional</label>
     {% endif %}
   </div>
+</div>
 {% endmacro %}
 
 

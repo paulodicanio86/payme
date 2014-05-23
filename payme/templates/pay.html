@@ -1,151 +1,162 @@
 {% extends "layout.html" %}
 {% block title %} - Pay Money{% endblock %}
 {% block content %}
-  <div class="account details row">
-    <div class="col-lg-2">
+  <div class="account_details row">
+    <div class="col-lg-2 col-xs-1">
     </div>
     
-    <div class="col-lg-8 col-xs-12">
+    <div class="col-lg-8 col-xs-10">
       <form class="form-horizontal" role="form" action="/verify" method="post">
-      
-        {% if amount.valid==True %}
-	<div class="form-group">
-	{% elif amount.valid==False %}
-	<div class="form-group has-error">
-	{% else %}
-	<div class="form-group">	
-	{% endif %}
-	  {% if amount.hidden %}
-	  <input type="hidden" name="amount" value="{{ amount.value }}">
+
+        <div class="amount row">
+	  {% if amount.valid==True %}
+	  <div class="form-group">
+	  {% elif amount.valid==False %}
+	  <div class="form-group has-error">
 	  {% else %}
-	  <label for="amount_id" class="col-lg-5 control-label">Amount</label>
-          <div class="col-lg-5 input-group">
-	    <span class="input-group-addon">{{ currency_html|safe }}</span>
-	    <input type="text" class="form-control" id="amount_id"
-	    name="amount" placeholder="1234.56"
-	    value="{{ amount.value }}" {% if amount.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="read_only_amount" {% if amount.read_only %}value="True"{% else %}value="False"{% endif %}>
-	  </div>
+	  <div class="form-group">	
 	  {% endif %}
+	    {% if amount.hidden %}
+	    <input type="hidden" name="amount" value="{{ amount.value }}">
+	    {% else %}
+	    <label for="amount_id" class="col-lg-5 col-xs-12 control-label">Amount</label>
+	    <div class="col-lg-5 col-xs-12 input-group">
+	      <span class="input-group-addon">{{ currency_html|safe }}</span>
+	      <input type="text" class="form-control" id="amount_id"
+	      name="amount" placeholder="1234.56"
+	      value="{{ amount.value }}" {% if amount.read_only %}readonly{% endif %}>
+	      <input type="hidden" name="read_only_amount" {% if amount.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    </div>
+	    {% endif %}
+	  </div>
 	</div>
 
-        {% if name_receiver.valid==True %}
-	<div class="form-group">
-	{% elif name_receiver.valid==False %}
-	<div class="form-group has-error">
-	{% else %}
-	<div class="form-group">	
-	{% endif %}
-	  {% if name_receiver.hidden %}
-	  <input type="hidden" name="name_receiver" value="{{ name_receiver.value }}">
+	<div class="name_receiver row">
+          {% if name_receiver.valid==True %}
+  	  <div class="form-group">
+	  {% elif name_receiver.valid==False %}
+	  <div class="form-group has-error">
 	  {% else %}
-	  <label for="name_receiver_id" class="col-lg-5 control-label">Receiver's Name</label>
-          <div class="col-lg-5 input-group">
-	    <input type="text" class="form-control" id="name_receiver_id"
-	    name="name_receiver" placeholder="John Smith" maxlength="18"
-	    value="{{ name_receiver.value }}" {% if name_receiver.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="read_only_name_receiver" {% if name_receiver.read_only %}value="True"{% else %}value="False"{% endif %}>
-	  </div>
+	  <div class="form-group">	
 	  {% endif %}
+	    {% if name_receiver.hidden %}
+	    <input type="hidden" name="name_receiver" value="{{ name_receiver.value }}">
+	    {% else %}
+	    <label for="name_receiver_id" class="col-lg-5 col-xs-12 control-label">Receiver's Name</label>
+            <div class="col-lg-5 col-xs-12 input-group">
+	      <input type="text" class="form-control" id="name_receiver_id"
+	      name="name_receiver" placeholder="John Smith" maxlength="18"
+	      value="{{ name_receiver.value }}" {% if name_receiver.read_only %}readonly{% endif %}>
+	      <input type="hidden" name="read_only_name_receiver" {% if name_receiver.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    </div>
+	    {% endif %}
+	  </div>
+	 </div>
+
+	<div class="email_receiver row">
+	  {% if email_receiver.valid==True %}
+	  <div class="form-group">
+	  {% elif email_receiver.valid==False %}
+	  <div class="form-group has-error">
+	  {% else %}
+	  <div class="form-group">	
+	  {% endif %}
+	    {% if email_receiver.hidden %}
+	    <input type="hidden" name="email_receiver" value="{{ email_receiver.value }}">
+	    {% else %}
+	    <label for="email_receiver_id" class="col-lg-5 col-xs-12 control-label">Receiver's E-Mail</label>
+            <div class="col-lg-5 col-xs-12 input-group">
+	      <input type="text" class="form-control" id="email_receiver_id"
+	      name="email_receiver" 
+	      value="{{ email_receiver.value }}" {% if email_receiver.read_only %}readonly{% endif %}>
+	      <input type="hidden" name="read_only_email_receiver" {% if email_receiver.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    </div>
+	    <label for="email_receiver" class="col-lg-2 col-xs-12 control-label">optional</label>
+	    {% endif %}
+	  </div>
 	</div>
 
-
-	{% if email_receiver.valid==True %}
-	<div class="form-group">
-	{% elif email_receiver.valid==False %}
-	<div class="form-group has-error">
-	{% else %}
-	<div class="form-group">	
-	{% endif %}
-	  {% if email_receiver.hidden %}
-	  <input type="hidden" name="email_receiver" value="{{ email_receiver.value }}">
+	<div class="receiver_account_number row">
+	  {% if account_number.valid==True %}
+	  <div class="form-group">
+	  {% elif account_number.valid==False %}
+	  <div class="form-group has-error">
 	  {% else %}
-	  <label for="email_receiver_id" class="col-lg-5 control-label">Receiver's E-Mail</label>
-          <div class="col-lg-5 input-group">
-	    <input type="text" class="form-control" id="email_receiver_id"
-	    name="email_receiver" 
-	    value="{{ email_receiver.value }}" {% if email_receiver.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="read_only_email_receiver" {% if email_receiver.read_only %}value="True"{% else %}value="False"{% endif %}>
-	  </div>
-	  <label for="email_receiver" class="col-lg-1 control-label">optional</label>
+	  <div class="form-group">	
 	  {% endif %}
-	</div>
-	
-	{% if account_number.valid==True %}
-	<div class="form-group">
-	{% elif account_number.valid==False %}
-	<div class="form-group has-error">
-	{% else %}
-	<div class="form-group">	
-	{% endif %}
-	  {% if account_number.hidden %}
-	  <input type="hidden" name="account_number" value="{{ account_number.value }}">
-	  {% else %}
-	  <label for="account_number_id" class="col-lg-5
-	control-label">Receiver's Account No.</label>
-          <div class="col-lg-5 input-group">
-	    <input type="text" class="form-control" id="account_number_id"
-	    name="account_number" placeholder="12345678" maxlength="8" 
-	    value="{{ account_number.value }}" {% if account_number.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="read_only_account_number" {% if account_number.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    {% if account_number.hidden %}
+	    <input type="hidden" name="account_number" value="{{ account_number.value }}">
+	    {% else %}
+	    <label for="account_number_id" class="col-lg-5 col-xs-12 control-label">Receiver's Account No.</label>
+            <div class="col-lg-5 col-xs-12 input-group">
+	      <input type="text" class="form-control" id="account_number_id"
+	      name="account_number" placeholder="12345678" maxlength="8" 
+	      value="{{ account_number.value }}" {% if account_number.read_only %}readonly{% endif %}>
+	      <input type="hidden" name="read_only_account_number" {% if account_number.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    </div>
+	    {% endif %}
 	  </div>
-	  {% endif %}
 	</div>
 
-	{% if sort_code.valid==True %}
-	<div class="form-group">
-	{% elif sort_code.valid==False %}
-	<div class="form-group has-error">
-	{% else %}
-	<div class="form-group">	
-	{% endif %}
-	  {% if sort_code.hidden %}
-	  <input type="hidden" name="sort_code" value="{{ sort_code.value }}">
+	<div class="receiver_sort_code row">
+	  {% if sort_code.valid==True %}
+	  <div class="form-group">
+	  {% elif sort_code.valid==False %}
+	  <div class="form-group has-error">
 	  {% else %}
-	  <label for="sort_code_id" class="col-lg-5
-	control-label">Receiver's Sort Code</label>
-          <div class="col-lg-5 input-group">
-	    <input type="text" class="form-control" id="sort_code_id"
-	    name="sort_code" placeholder="12-34-56" maxlength="8" 
-	    value="{{ sort_code.value }}" {% if sort_code.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="read_only_sort_code" {% if sort_code.read_only %}value="True"{% else %}value="False"{% endif %}>
-	  </div>
+	  <div class="form-group">	
 	  {% endif %}
+	    {% if sort_code.hidden %}
+	    <input type="hidden" name="sort_code" value="{{ sort_code.value }}">
+	    {% else %}
+	    <label for="sort_code_id" class="col-lg-5 col-xs-12 control-label">Receiver's Sort Code</label>
+            <div class="col-lg-5 col-xs-12 input-group">
+	      <input type="text" class="form-control" id="sort_code_id"
+	      name="sort_code" placeholder="12-34-56" maxlength="8" 
+	      value="{{ sort_code.value }}" {% if sort_code.read_only %}readonly{% endif %}>
+	      <input type="hidden" name="read_only_sort_code" {% if sort_code.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    </div>
+	    {% endif %}
+	  </div>
 	</div>
-	
-	{% if reference.valid==True %}
-	<div class="form-group">
-	{% elif reference.valid==False %}
-	<div class="form-group has-error">
-	{% else %}
-	<div class="form-group">	
-	{% endif %}
-	  {% if reference.hidden %}
-	  <input type="hidden" name="reference" value="{{ reference.value }}">
+
+	<div class="reference row">
+	  {% if reference.valid==True %}
+	  <div class="form-group">
+	  {% elif reference.valid==False %}
+	  <div class="form-group has-error">
 	  {% else %}
-	  <label for="reference_id" class="col-lg-5 control-label">Reference</label>
-          <div class="col-lg-5 input-group">
-	    <input type="text" class="form-control" id="reference_id"
-	    name="reference" maxlength="18" 
-	    value="{{ reference.value }}" {% if reference.read_only %}readonly{% endif %}>
-	    <input type="hidden" name="read_only_reference" {% if reference.read_only %}value="True"{% else %}value="False"{% endif %}>
-	  </div>
-	  <label for="reference" class="col-lg-1 control-label">optional</label>
+	  <div class="form-group">	
 	  {% endif %}
+	    {% if reference.hidden %}
+	    <input type="hidden" name="reference" value="{{ reference.value }}">
+	    {% else %}
+	    <label for="reference_id" class="col-lg-5 col-xs-12 control-label">Reference</label>
+            <div class="col-lg-5 col-xs-12 input-group">
+	      <input type="text" class="form-control" id="reference_id"
+	      name="reference" maxlength="18" 
+	      value="{{ reference.value }}" {% if reference.read_only %}readonly{% endif %}>
+	      <input type="hidden" name="read_only_reference" {% if reference.read_only %}value="True"{% else %}value="False"{% endif %}>
+	    </div>
+	    <label for="reference" class="col-lg-2 col-xs-12 control-label">optional</label>
+	    {% endif %}
+	  </div>
 	</div>
 
 	<input type="hidden" name="add_fee" value="{{ add_fee }}">
 
-	<div class="form-group">
-          <div class="col-lg-offset-5 col-lg-5">
-	    <button type="submit" class="btn btn-success">Next <span class="glyphicon glyphicon-chevron-right"></span></button>
+	<div class="next row">
+	  <div class="form-group">
+            <div class="col-lg-3 col-lg-offset-5 col-xs-12">
+	      <button type="submit" class="btn btn-success btn-block">Next <span class="glyphicon glyphicon-chevron-right"></span></button>
+            </div>
           </div>
-        </div>
-
+	</div>
+	
 	</form>
     </div>
     
-    <div class="col-lg-2">
+    <div class="col-lg-2 col-xs-1">
     </div>
   </div>
 {% endblock %}

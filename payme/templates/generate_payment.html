@@ -2,10 +2,10 @@
 {% block title %} - Receive Money{% endblock %}
 {% block content %}
   <div class="account details row">
-    <div class="col-lg-2">
+    <div class="col-lg-2 col-xs-1">
     </div>
 
-    <div class="col-lg-8 col-xs-12">
+    <div class="col-lg-8 col-xs-10">
       <form class="form-horizontal" role="form" action="/generate_payment/" method="post">
 
       {{ form.csrf_token }}
@@ -17,17 +17,20 @@
       {{ render_field(form.account_number, class='form-control', placeholder='12345678', maxlength='8') }}
       {{ render_field(form.sort_code, class='form-control', placeholder='12-34-56', maxlength='8') }}
       {{ render_field(form.reference, class='form-control', maxlength='18') }}
-      	
-	<div class="form-group">
-          <div class="col-lg-offset-5 col-lg-5">
-	    <button type="submit" class="btn btn-success">Next <span class="glyphicon glyphicon-chevron-right"></span></button>
+
+
+      <div class="next row">
+        <div class="form-group">
+          <div class="col-lg-3 col-lg-offset-5 col-xs-12">
+	    <button type="submit" class="btn btn-success btn-block">Next <span class="glyphicon glyphicon-chevron-right"></span></button>
           </div>
         </div>
+      </div>
 
       </form>
     </div>
     
-    <div class="col-lg-2">
+    <div class="col-lg-2 col-xs-1">
     </div>
   </div>
 {% endblock %}
