@@ -3,8 +3,21 @@ from flask import Flask
 ##from mongokit import Connection
 ##from payme.db_entry import Payment
 
+def get_bool(value):
+    '''
+    converts a string into a boolean value
+    '''
+    if str(value)=='True':
+        return True
+    else:
+        return False
 
-active = True # turn webpage on/off
+######################
+# Settings
+######################
+
+active = get_bool(os.environ['ONLINE']) # turn webpage on/off
+print('-----------------',os.environ['ONLINE'], active)
 company = 'NicerPay'
 domain = 'www.nicerpay.com'
 company_email = 'info@nicerpay.com'
