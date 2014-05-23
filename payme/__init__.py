@@ -15,9 +15,7 @@ def get_bool(value):
 ######################
 # Settings
 ######################
-
-active = get_bool(os.environ['ONLINE']) # turn webpage on/off
-print('-----------------',os.environ['ONLINE'], active)
+active = get_bool(os.environ['ONLINE']) # True/False = turn webpage on/off
 company = 'NicerPay'
 domain = 'www.nicerpay.com'
 company_email = 'info@nicerpay.com'
@@ -57,7 +55,7 @@ app.config.from_object(__name__)
 
 
 # set the secret key. keep this really secret:
-app.secret_key = '\xa8\xe2\x0f\xcd\xb4\xfby\xb0\x16\xaa/i\xfam8\x8e\xd7\xd5\xb5\x1e\x10\x93\xee+'
+app.secret_key = os.environ['APP_SECRET_KEY']
 
 
 # database configuration
