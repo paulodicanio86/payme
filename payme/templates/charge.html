@@ -2,7 +2,7 @@
 {% block title %} - Pay Money{% endblock %}
 {% block content %}
   <div class="charge details row">
-    <div class="col-lg-2">
+    <div class="col-lg-2 hidden-xs">
     </div>
     
     <div class="col-lg-8 col-xs-12">
@@ -105,13 +105,12 @@
           <div class="col-lg-offset-5 col-lg-5">
 	    <script src="https://checkout.stripe.com/checkout.js"
 	    class="stripe-button"
+	    data-billing-address=true
 	    data-key="{{ key }}"
 	    data-description="Please enter your details"
 	    data-name="NicerPay"
 	    data-amount = "{{ payment.amount_pence }}"
-	    data-currency="{{ currency }}"
-	    data-billing-address=true
-	    >
+	    data-currency="{{ currency }}">
 	    </script>
           </div>
         </div>
@@ -119,7 +118,7 @@
       </form>
     </div>
     
-    <div class="col-lg-2">
+    <div class="col-lg-2 hidden-xs">
     </div>
   </div>
 {% endblock %}

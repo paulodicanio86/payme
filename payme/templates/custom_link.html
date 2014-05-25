@@ -1,24 +1,53 @@
 {% extends "layout.html" %}
 {% block title %} - Receive Money{% endblock %}
 {% block content %}
-  <div class="account details row">
+  <div class="confirm row">
     <div class="col-lg-12 col-xs-12">
       <h3>Congratulations, {{name_receiver}}!</h3>
-      <p>Your custom payment link has been created:</br>&nbsp;</p>
+      <p>Your custom payment link has been created.</p>
     </div>
   </div>
 
-  <div class="account details row">
+  <div class="clearfix visible-lg"><p>&nbsp;</p></div>
+  
+  <div class="button row">
+    <div class="col-lg-4 col-lg-offset-2 col-xs-12">
+      <a href="{{ rel_link }}" class="btn btn-success btn-block"
+    role="button" target="_blank">Open link in new page <span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div>
+    <div class="clearfix visible-xs"><p>&nbsp;</p></div>
+    <div class="col-lg-4 col-xs-12">
+      <a href="
+mailto:?{% if email_receiver != '' %}cc={{
+    email_receiver }}&{% endif %}subject=Payment for
+ {{name_receiver}}&body=Please make a payment for
+ {{name_receiver}}{% if amount_charged != '' %} of {{currency|upper}}{{ amount_charged
+    }}{% endif %}
+ using the following link:%0D%0A%0D%0A{{ abs_link }}%0D%0A%0D%0AThank you for using NicerPay.
+      "
+    class="btn btn-success btn-block" role="button">Send link via e-mail <span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div>
+  </div>
+
+  <p>&nbsp;</p>
+  
+  <div class="link row">
     <div class="col-lg-12 col-xs-12">
       <div class="well well-lg">
-	<p class="text-center"><strong>{{ abs_link }}</strong></p>
-	<p class="text-center"><i>or even shorter:</i></p>
-	<p class="text-center"><strong>{{ abs_tiny_link }}</strong></p>
+	<div class="row">
+	  <div class="col-lg-12 hidden-xs">
+	    <p class="text-center"><strong><a href="{{ rel_link }}" target="_blank">{{ abs_link }}</a></strong></p>
+	    <p class="text-center"><i>or even shorter:</i></p>
+	  </div>
+	    <div class="col-lg-12 col-xs-12">
+	    <p class="text-center"><strong><a href="{{ abs_tiny_link }}" target="_blank">{{ abs_tiny_link }}</a></strong></p>
+	  </div>
+	</div>
       </div>
     </div>
   </div>
 
-  <div class="account details row">
+  <div class="info row">
     <div class="col-lg-12 col-xs-12">
       <div class="panel panel-info">
         <div class="panel-heading">
@@ -50,27 +79,4 @@
       </div>
     </div>
   </div>
-
-  <div class="account details row">
-    <p>&nbsp;</p>
-     <div class="col-lg-2 col-xs-0">
-    </div>
-    <div class="col-lg-5 col-xs-12">
-      <a href="{{ rel_link }}" class="btn btn-success"
-    role="button" target="_blank">Open link in new page <span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div>
-    <div class="col-lg-5 col-xs-12">
-      <a href="
-mailto:?{% if email_receiver != '' %}cc={{
-    email_receiver }}&{% endif %}subject=Payment for
- {{name_receiver}}&body=Please make a payment for
- {{name_receiver}}{% if amount_charged != '' %} of {{ amount_charged
-    }} {{ currency|upper }}{% endif %}
- using the following link:%0D%0A%0D%0A{{ abs_link }}%0D%0A%0D%0AThanks.
-      "
-    class="btn btn-success" role="button">Send link via e-mail<span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div>
-  </div>
-
-
 {% endblock %}
