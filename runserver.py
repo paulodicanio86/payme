@@ -1,4 +1,6 @@
 #!/usr/bin/env python
 from payme import app
+from socket import gethostname, gethostbyname
 
-app.run(debug=True, host='192.168.0.3')
+ip_address = gethostbyname(gethostname())
+app.run(debug=True, host=ip_address)
