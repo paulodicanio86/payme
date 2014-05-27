@@ -76,7 +76,7 @@ def send_emails(success, payment):
         # send email to me
         send_email(company_email,
                    '[failed_payment]',
-                   'return_details',
+                   'return_payment_details',
                    payment)
         title = '[' + company + '] Unsuccessful Payment'
 
