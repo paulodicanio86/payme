@@ -15,8 +15,8 @@ Thank you for using NicerPay.
         by = ' by ' + kwargs.get('email_sender')
         
     reference = ''
-    if kwargs.get('reference', '[reference]') != '':
-        reference = ', Reference: ' + kwargs.get('reference', '[reference]')
+    if kwargs.get('reference', '') != '':
+        reference = ', Reference: ' + kwargs.get('reference')
         
     text = text.format(name_receiver=kwargs.get('name_receiver', '[receiver name]'),
                        pay_out=two_digit_string(kwargs.get('pay_out', '[empty sum]')),
@@ -30,7 +30,7 @@ Thank you for using NicerPay.
 
 def return_text_success_sender(**kwargs):
     text = '''
-Hi,
+Hi {name_sender},
 Your card has been successfully charged {currency}{charged}, of which {currency}{pay_out} will reach the account of {name_receiver}
 (Account number: {account_number}, Sort Code: {sort_code}{reference}) within approximately 7 days.
 
@@ -38,10 +38,11 @@ Thank you for using NicerPay.
     '''
     
     reference = ''
-    if kwargs.get('reference', '[reference]') != '':
-        reference = ', Reference: ' + kwargs.get('reference', '[reference]')
+    if kwargs.get('reference', '') != '':
+        reference = ', Reference: ' + kwargs.get('reference')
         
-    text = text.format(charged=two_digit_string(kwargs.get('charged', '[empty sum]')),
+    text = text.format(name_sender=kwargs.get('name_sender'),
+                       charged=two_digit_string(kwargs.get('charged', '[empty sum]')),
                        pay_out=two_digit_string(kwargs.get('pay_out', '[empty sum]')),
                        name_receiver=kwargs.get('name_receiver', '[receiver name]'),
                        account_number=kwargs.get('account_number', '[account number]'),
@@ -53,7 +54,7 @@ Thank you for using NicerPay.
 
 def return_text_failure_sender(**kwargs):
     text = '''
-Hi,
+Hi{name_sender},
 Your payment of {currency}{pay_out} to the account of {name_receiver}
 (Account number: {account_number}, Sort Code: {sort_code}{reference}) has just been declined.
 Please ensure you have entered the correct card information and/or try again with a different card.
@@ -63,10 +64,15 @@ Thank you for using NicerPay.
     '''
 
     reference = ''
-    if kwargs.get('reference', '[reference]') != '':
-        reference = ', Reference: ' + kwargs.get('reference', '[reference]')
+    if kwargs.get('reference', '') != '':
+        reference = ', Reference: ' + kwargs.get('reference')
+
+    name_sender = ''
+    if kwargs.get('name_sender', '') != '' and kwargs.get('name_sender', '') != '[card was declined, no name]':
+        name_sender = ' ' + kwargs.get('name_sender')
     
-    text = text.format(pay_out=two_digit_string(kwargs.get('pay_out', '[empty sum]')),
+    text = text.format(name_sender=name_sender,
+                       pay_out=two_digit_string(kwargs.get('pay_out', '[empty sum]')),
                        name_receiver=kwargs.get('name_receiver', '[receiver name]'),
                        account_number=kwargs.get('account_number', '[account number]'),
                        sort_code=kwargs.get('sort_code', '[sort code]'),
@@ -75,9 +81,10 @@ Thank you for using NicerPay.
     return text
 
 
-def return_details(**kwargs):
+def return_payment_details(**kwargs):
     text = '''date: {datetime}
 paid-in: {paid_in}
+from: {name_sender}
 
 pay-out: {pay_out}
 name: {name_receiver}
@@ -95,15 +102,23 @@ check-sum: {check_sum}
 
     text = text.format(datetime=datetime,
                        paid_in=two_digit_string(kwargs.get('paid_in')),
+                       name_sender=kwargs.get('name_sender'),
                        pay_out=two_digit_string(kwargs.get('pay_out')),
-                       name_receiver=kwargs.get('name_receiver'),
+                       name_receiver=kwargs.get('name_receiver', ''),
                        account_number=kwargs.get('account_number'),
                        sort_code=kwargs.get('sort_code'),
-                       reference=kwargs.get('reference'),
+                       reference=kwargs.get('reference', ''),
                        profit2=kwargs.get('profit2'),
                        fee_stripe=kwargs.get('fee_stripe'),
                        check_sum=kwargs.get('check_sum'))
     
     return text+str(kwargs)
 
+def return_payment_details_title(**kwargs):
+    title = '[make_payment] in/out {paid_in}/{pay_out} - {name_sender}'
+    title = title.format(paid_in=two_digit_string(kwargs.get('paid_in')),
+                         pay_out=two_digit_string(kwargs.get('pay_out')),
+                         name_sender=kwargs.get('name_sender')
+                         )
+    return title
     

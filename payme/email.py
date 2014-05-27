@@ -51,9 +51,11 @@ def send_emails(success, payment):
     '''
     if success:
         # send email to me
+        title_fn = getattr(email_texts, 'return_payment_details_title')
+        title = title_fn(**payment)
         send_email(company_email,
-                   '[make_payment]',
-                   'return_details',
+                   title,
+                   'return_payment_details',
                    payment)
         
         title = '[' + company + '] Successful Payment'
@@ -63,6 +65,7 @@ def send_emails(success, payment):
                        title,
                        'return_text_success_sender',
                        payment)
+
         # send email to receiver to notify success
         if payment['email_receiver'] != '':
             send_email(payment['email_receiver'],
@@ -76,6 +79,7 @@ def send_emails(success, payment):
                    'return_details',
                    payment)
         title = '[' + company + '] Unsuccessful Payment'
+
         # send email to sender to notify failure
         if payment['email_sender'] != '':
             send_email(payment['email_sender'],
