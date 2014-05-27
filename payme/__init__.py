@@ -15,14 +15,15 @@ def get_bool(value):
 ######################
 # Settings
 ######################
+# general settings
 active = get_bool(os.environ['ONLINE']) # True/False = turn webpage on/off
-testmode_stripe = get_bool(os.environ['TESTMODE_STRIPE']) # True/False = turn stripe testmode on/off
 company = 'NicerPay'
 domain = 'www.nicerpay.com'
 company_email = 'info@nicerpay.com'
 company_info_email = 'info@nicerpay.com'
 
 
+# define global variables
 variable_names = ['name_receiver', 'account_number', 'sort_code', 'reference', 'amount', 'email_receiver']
 currency = 'gbp' # required for stripe
 currency_html = '<span class="glyphicon glyphicon-cutlery"></span>' # knife and fork symbol
@@ -30,12 +31,14 @@ currency_html = '<i class="fa fa-gbp"></i>' # Fancy pound symbol
 currency_html = '&pound;' # HTML pound symbol
 
 
+# set threshold variables
 threshold = 100.00 # in [GBP], threshold for minimum charge (fixed_fee)
 card_usage_fee = 0.00 # in [GBP]
 rate = 3.00 # in [%], to be charged when amount is over threshold. corresponds to 3.0928% in inverted mode.
 fixed_fee = 3.00 # in [GBP], to be charged when amount is under threshold
 
 
+# configure the email account
 email_account = {
     'user': company_email,
     'password': os.environ['EMAIL_PWD'],
@@ -44,19 +47,15 @@ email_account = {
     'from': company_email
 }
 
-# set the strip keys (test mode and live mode)
-stripe_secret_key = os.environ['SECRET_KEY']
-stripe_publishable_key = os.environ['PUBLISHABLE_KEY']
-if testmode_stripe:
-    stripe_secret_key = os.environ['SECRET_TESTMODE_KEY']
-    stripe_publishable_key = os.environ['PUBLISHABLE_TESTMODE_KEY']
 
+# set the stripe keys
 stripe_keys = {
-    'secret_key': stripe_secret_key,
-    'publishable_key': stripe_publishable_key
+    'secret_key': os.environ['SECRET_KEY'],
+    'publishable_key': os.environ['PUBLISHABLE_KEY']
 }
 
 
+# make the Flask app object
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -68,12 +67,11 @@ app.secret_key = os.environ['APP_SECRET_KEY']
 # database configuration
 ##MONGODB_HOST = 'localhost'
 ##MONGODB_PORT = 27017
-
-
 # connect to the database
 ##db_connection = Connection(app.config['MONGODB_HOST'],
 ##                        app.config['MONGODB_PORT'])
 ##db_connection.register([Payment])
 
 
+# activate/make views ready
 import payme.views

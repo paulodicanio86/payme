@@ -133,7 +133,7 @@ def charge_post():
         values[entry] = request.form[entry]
 
 
-    # Connecting with strip and charging if successfull
+    # Connecting with stripe and charging if successfull
     success = False
     name_sender = ''
     email_sender = ''
@@ -300,13 +300,13 @@ def generate_payment(company=company, currency=currency, currency_html=currency_
         rel_link = optional_add(rel_link, form.amount.data)
         rel_link = optional_add(rel_link, form.reference.data)
         rel_link = optional_add(rel_link, form.email_receiver.data)      
-        # Strip empty cells at the end of link paths
-        def strip_end(link, suffix):
+        # Remove empty cells at the end of link paths
+        def remove_end(link, suffix):
             while link.endswith(suffix):
                 link = link[:-len(suffix)]
             return link
 
-        rel_link = strip_end(rel_link, 'empty/')
+        rel_link = remove_end(rel_link, 'empty/')
         rel_link = convert_white_space_in_link(rel_link)
         abs_link = domain + rel_link
         abs_tiny_link = tinyurl.create_one('http://' + abs_link)
