@@ -162,6 +162,8 @@ def charge_post():
         success = False
         name_sender = '[card was declined, no name]'
         email_sender = ''
+        name_sender = customer.cards.data[0].name
+        email_sender = customer.email
         other_data = {}
 
     # add to and modify final_payment dictionary
