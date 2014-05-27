@@ -23,7 +23,7 @@ Thank you for using NicerPay.
                        by=by,
                        account_number=kwargs.get('account_number', '[account number]'),
                        sort_code=kwargs.get('sort_code', '[sort code]'),
-                       currency=currency,
+                       currency=currency.upper(),
                        reference=reference)
     return text
 
@@ -47,7 +47,7 @@ Thank you for using NicerPay.
                        name_receiver=kwargs.get('name_receiver', '[receiver name]'),
                        account_number=kwargs.get('account_number', '[account number]'),
                        sort_code=kwargs.get('sort_code', '[sort code]'),
-                       currency=currency,
+                       currency=currency.upper(),
                        reference=reference)
     return text
 
@@ -76,7 +76,7 @@ Thank you for using NicerPay.
                        name_receiver=kwargs.get('name_receiver', '[receiver name]'),
                        account_number=kwargs.get('account_number', '[account number]'),
                        sort_code=kwargs.get('sort_code', '[sort code]'),
-                       currency=currency,
+                       currency=currency.upper(),
                        reference=reference)
     return text
 
