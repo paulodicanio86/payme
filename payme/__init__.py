@@ -16,6 +16,7 @@ def get_bool(value):
 # Settings
 ######################
 active = get_bool(os.environ['ONLINE']) # True/False = turn webpage on/off
+testmode_stripe = get_bool(os.environ['TESTMODE_STRIPE']) # True/False = turn stripe testmode on/off
 company = 'NicerPay'
 domain = 'www.nicerpay.com'
 company_email = 'info@nicerpay.com'
@@ -43,10 +44,16 @@ email_account = {
     'from': company_email
 }
 
+# set the strip keys (test mode and live mode)
+stripe_secret_key = os.environ['SECRET_KEY']
+stripe_publishable_key = os.environ['PUBLISHABLE_KEY']
+if testmode_stripe:
+    stripe_secret_key = os.environ['SECRET_TESTMODE_KEY']
+    stripe_publishable_key = os.environ['PUBLISHABLE_TESTMODE_KEY']
 
 stripe_keys = {
-    'secret_key': os.environ['SECRET_KEY'],
-    'publishable_key': os.environ['PUBLISHABLE_KEY']
+    'secret_key': stripe_secret_key,
+    'publishable_key': stripe_publishable_key
 }
 
 
