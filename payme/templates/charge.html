@@ -20,89 +20,88 @@
         <input type="hidden" name="pay_out" value="{{ payment.pay_out }}">
 
       
-        <div class="form-group">
-	  <div class="col-lg-12">
+        <div class="form-group row">
+	  <div class="col-lg-12 col-xs-12">
 	    <h3>Summary: </h3>
 	  </div>
 	</div>
-        <div class="form-group">
-	  <div class="col-lg-5">
+        <div class="form-group row">
+	  <div class="col-lg-5 col-xs-7">
 	    Amount:
 	  </div>
-	  <div class="col-lg-7">
+	  <div class="col-lg-7 col-xs-5">
 	    {{ currency_html|safe }}{{ payment.amount_orig }}
 	  </div>
 	</div>
-	<div class="form-group">
-	  <div class="col-lg-5">
+	<div class="form-group row">
+	  <div class="col-lg-5 col-xs-7">
 	    Account Holder Name:
 	  </div>
-	  <div class="col-lg-7">
+	  <div class="col-lg-7 col-xs-5">
 	    {{ payment.name_receiver }}
 	  </div>
 	</div>
-	<div class="form-group">
-	  <div class="col-lg-5">
+	<div class="form-group row">
+	  <div class="col-lg-5 col-xs-7">
 	    Account Number:
 	  </div>
-	  <div class="col-lg-7">
+	  <div class="col-lg-7 col-xs-5">
 	    {{ payment.account_number }}
 	  </div>
 	</div>
-	<div class="form-group">
-	  <div class="col-lg-5">
+	<div class="form-group row">
+	  <div class="col-lg-5 col-xs-7">
 	    Sort Code:
 	  </div>
-	  <div class="col-lg-7">
+	  <div class="col-lg-7 col-xs-5">
 	    {{ payment.sort_code }}
 	  </div>
 	</div>
 	{% if payment.reference!='' %}
-	<div class="form-group">
-	  <div class="col-lg-5">
+	<div class="form-group row">
+	  <div class="col-lg-5 col-xs-7">
 	    Reference:
 	  </div>
-	  <div class="col-lg-7">
+	  <div class="col-lg-7 col-xs-5">
 	    {{ payment.reference }}
 	  </div>
 	</div>
 	{% endif %}
 	{% if payment.email_receiver!='' %}
-	<div class="form-group">
-	  <div class="col-lg-5">
+	<div class="form-group row">
+	  <div class="col-lg-5 col-xs-7">
 	    Account Holder E-Mail:
 	  </div>
-	  <div class="col-lg-7">
+	  <div class="col-lg-7 col-xs-5">
 	    {{ payment.email_receiver }}
 	  </div>
 	</div>
 	{% endif %}
-	<div class="form-group">
-	  <div class="col-lg-12">
-	    
+	<div class="form-group row">
+	  <div class="col-lg-12 hidden-xs">
 	  </div>
 	</div>
 	{% if add_fee %}
-	<div class="form-group">
-	  <div class="col-lg-5">
+	<div class="form-group row">
+	  <div class="col-lg-5 col-xs-7">
 	    Fee:
 	  </div>
-	  <div class="col-lg-7">
+	  <div class="col-lg-7 col-xs-5">
 	    {{ currency_html|safe }}{{ payment.fee }}
 	  </div>
 	</div>
 	{% endif %}
-	<div class="form-group">
-	  <div class="col-lg-5">
+	<div class="form-group row">
+	  <div class="col-lg-5 col-xs-7">
 	    Chargeable Amount:
 	  </div>
-	  <div class="col-lg-7">
+	  <div class="col-lg-7 col-xs-5">
 	    {{ currency_html|safe }}{{ payment.amount }}
 	  </div>
 	</div>
 	
-	<div class="form-group">
-          <div class="col-lg-offset-5 col-lg-5">
+	<div class="form-group row">
+          <div class="col-lg-offset-5 col-lg-5 col-xs-12">
 	    <script src="https://checkout.stripe.com/checkout.js"
 	    class="stripe-button"
 	    data-billing-address=true
