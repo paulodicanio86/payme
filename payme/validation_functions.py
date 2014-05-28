@@ -1,7 +1,7 @@
 import re, string, datetime
 from wtforms import ValidationError
 
-from payme import (rate, card_usage_fee, threshold, fixed_fee)
+from payme import (rate, card_usage_fee, threshold, fixed_fee, minimum_payment)
 
 
 def is_number(input):
@@ -116,7 +116,12 @@ def convert_price(price):
     """
     Convert ,->.
     """
-    return string.replace(price, ',', '.')
+    price = string.replace(price, ',', '.')
+    if '.' not in price:
+        price = price + '.00'
+    if price.endswith('.0'):
+        price = price + '0'
+    return price
 
 def valid_fee(value):
     """
@@ -131,12 +136,12 @@ def valid_fee(value):
 
 def valid_price(value):
     """
-    Validate price and check that price is >0.50p
+    Validate price and check that price is > minimum price
     Input/Output are strings
     Valid: 129.99
     """
     return (valid_fee(value)
-            and float(value)>3.00)
+            and float(value)>minimum_payment)
 
 def price_in_pence(price):
     """
@@ -210,7 +215,7 @@ class Sort_Code(object):
         self.message = message
 
     def __call__(self, form, field):
-        value = field.data
+        value = convert_sort_code(field.data)
         if not valid_sort_code(value):
             raise ValidationError(self.message)
 
@@ -232,7 +237,7 @@ class Amount(object):
         self.message = message
 
     def __call__(self, form, field):
-        value = field.data
+        value = convert_price(field.data)
         if not valid_price(value):
             raise ValidationError(self.message)
 

@@ -132,7 +132,6 @@ def charge_post():
     for entry in variable_names + ['fee', 'fee_stripe', 'pay_out']:
         values[entry] = request.form[entry]
 
-
     # Connecting with stripe and charging if successfull
     success = False
     name_sender = ''

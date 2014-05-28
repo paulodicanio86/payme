@@ -36,6 +36,7 @@ threshold = 100.00 # in [GBP], threshold for minimum charge (fixed_fee)
 card_usage_fee = 0.00 # in [GBP]
 rate = 3.00 # in [%], to be charged when amount is over threshold. corresponds to 3.0928% in inverted mode.
 fixed_fee = 3.00 # in [GBP], to be charged when amount is under threshold
+minimum_payment = 3.00 # in [GBP] the minimum payment accepted
 
 
 # configure the email account
