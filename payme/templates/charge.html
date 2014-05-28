@@ -6,26 +6,14 @@
     </div>
     
     <div class="col-lg-8 col-xs-12">
-      <form class="form-horizontal" role="form" action="/charge" method="post">
-
-        <input type="hidden" name="name_receiver" value="{{ payment.name_receiver }}">
-        <input type="hidden" name="account_number" value="{{ payment.account_number }}">
-        <input type="hidden" name="sort_code" value="{{ payment.sort_code }}">
-        <input type="hidden" name="reference" value="{{ payment.reference }}">
-        <input type="hidden" name="amount" value="{{ payment.amount }}">
-
-        <input type="hidden" name="email_receiver" value="{{ payment.email_receiver }}">
-        <input type="hidden" name="fee" value="{{ payment.fee }}">
-        <input type="hidden" name="fee_stripe" value="{{ payment.fee_stripe }}">
-        <input type="hidden" name="pay_out" value="{{ payment.pay_out }}">
-
+      <form class="form-horizontal" id="chargeForm" role="form" action="/charge" method="post">
       
-        <div class="form-group row">
+        <div class="form-group summary row">
 	  <div class="col-lg-12 col-xs-12">
 	    <h3>Summary: </h3>
 	  </div>
 	</div>
-        <div class="form-group row">
+        <div class="form-group amount row">
 	  <div class="col-lg-5 col-xs-7">
 	    Amount:
 	  </div>
@@ -33,7 +21,7 @@
 	    {{ currency_html|safe }}{{ payment.amount_orig }}
 	  </div>
 	</div>
-	<div class="form-group row">
+	<div class="form-group account_name row">
 	  <div class="col-lg-5 col-xs-7">
 	    Account Holder Name:
 	  </div>
@@ -41,7 +29,7 @@
 	    {{ payment.name_receiver }}
 	  </div>
 	</div>
-	<div class="form-group row">
+	<div class="form-group account_number row">
 	  <div class="col-lg-5 col-xs-7">
 	    Account Number:
 	  </div>
@@ -49,7 +37,7 @@
 	    {{ payment.account_number }}
 	  </div>
 	</div>
-	<div class="form-group row">
+	<div class="form-group sort_code row">
 	  <div class="col-lg-5 col-xs-7">
 	    Sort Code:
 	  </div>
@@ -58,7 +46,7 @@
 	  </div>
 	</div>
 	{% if payment.reference!='' %}
-	<div class="form-group row">
+	<div class="form-group reference row">
 	  <div class="col-lg-5 col-xs-7">
 	    Reference:
 	  </div>
@@ -68,7 +56,7 @@
 	</div>
 	{% endif %}
 	{% if payment.email_receiver!='' %}
-	<div class="form-group row">
+	<div class="form-group email_receiver row">
 	  <div class="col-lg-5 col-xs-7">
 	    Account Holder E-Mail:
 	  </div>
@@ -77,12 +65,12 @@
 	  </div>
 	</div>
 	{% endif %}
-	<div class="form-group row">
+	<div class="form-group hidden row">
 	  <div class="col-lg-12 hidden-xs">
 	  </div>
 	</div>
 	{% if add_fee %}
-	<div class="form-group row">
+	<div class="form-group fee row">
 	  <div class="col-lg-5 col-xs-7">
 	    Fee:
 	  </div>
@@ -91,7 +79,7 @@
 	  </div>
 	</div>
 	{% endif %}
-	<div class="form-group row">
+	<div class="form-group chargeable_amount row">
 	  <div class="col-lg-5 col-xs-7">
 	    Chargeable Amount:
 	  </div>
@@ -100,21 +88,66 @@
 	  </div>
 	</div>
 	
-	<div class="form-group row">
-          <div class="col-lg-offset-5 col-lg-5 col-xs-12">
-	    <script src="https://checkout.stripe.com/checkout.js"
-	    class="stripe-button"
-	    data-billing-address=true
-	    data-key="{{ key }}"
-	    data-description="Please enter your details"
-	    data-name="NicerPay"
-	    data-amount = "{{ payment.amount_pence }}"
-	    data-currency="{{ currency }}">
-	    </script>
-          </div>
-        </div>
+	<div class="form-group stripe_button row">
+	  <div class="col-lg-5 col-lg-offset-5 col-xs-12">
 
+	    <script src="https://checkout.stripe.com/checkout.js"></script>
+
+	    <input type="hidden" name="name_receiver" value="{{ payment.name_receiver }}">
+	    <input type="hidden" name="account_number" value="{{ payment.account_number }}">
+	    <input type="hidden" name="sort_code" value="{{ payment.sort_code }}">
+	    <input type="hidden" name="reference" value="{{ payment.reference }}">
+	    <input type="hidden" name="amount" value="{{ payment.amount }}">
+	    <input type="hidden" name="email_receiver" value="{{ payment.email_receiver }}">
+	    <input type="hidden" name="fee" value="{{ payment.fee }}">
+	    <input type="hidden" name="fee_stripe" value="{{ payment.fee_stripe }}">
+	    <input type="hidden" name="pay_out" value="{{ payment.pay_out }}">
+
+	    <input type="hidden" name="stripeToken" id="stripeToken"/>
+	    <input type="hidden" name="stripeEmail" id="stripeEmail"/>
+	    
+	    <button id="CustomStripeButton" class="btn btn-success btn-block">Pay with Card <span class="glyphicon glyphicon-chevron-right"></span></button>
+
+	    <script>
+	      var handler = StripeCheckout.configure({
+	        key: '{{ key }}',
+	        token: function(token, args) {
+	          document.getElementById("stripeToken").value = token.id;                              
+                  document.getElementById("stripeEmail").value = token.email;
+                  document.getElementById("chargeForm").submit();
+	          // Use the token to create the charge with a server-side script.
+	          // You can access the token ID with `token.id`
+	        }
+	      });
+              
+              document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
+	        // Open Checkout with further options
+	        handler.open({
+	          name: '{{ company }}',
+	          description: 'Please enter your details',
+	          amount: {{ payment.amount_pence }},
+	          currency: '{{ currency }}',
+	          billingAddress: true
+	        });
+	        e.preventDefault();
+	      });
+	    </script>
+	    
+          </div>
+        </div>	
       </form>
+
+      {% if add_fee %}
+	<div class="form-group back_button row">  
+	  <div class="col-lg-5 col-lg-offset-5 col-xs-12">
+	    <div class="clearfix visible-xs"><p>&nbsp;</p></div>
+	  </div>
+
+	  <div class="visible-xs col-xs-12">
+	    <button id="backButton" class="btn btn-warning btn-block" onclick="history.go(-1);return false;"><span class="glyphicon glyphicon-chevron-left"></span> Go back</button>
+	  </div>
+        </div>
+      {% endif %}
     </div>
     
     <div class="col-lg-2 hidden-xs">
