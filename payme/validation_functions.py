@@ -114,12 +114,19 @@ def convert_special_characters(input_string):
 
 def convert_price(price):
     """
-    Convert ,->.
+    Convert ','->'' and decimal fixes
     """
-    price = string.replace(price, ',', '.')
+    # if a comma is given as decimal separator replace this with a '.'
+    if price.endswith(',', 0, -1) or price.endswith(',', 0, -2):
+       price = price[:-3] + price[-3:].replace(',', '.')
+    # remove delimeter (,) if used (say for thousands)
+    if ',' in price:
+        price = string.replace(price, ',', '')
+    # if no cent values are given add them:
     if '.' not in price:
         price = price + '.00'
-    if price.endswith('.0'):
+    # if only one decimal is given add a zero
+    if price.endswith('.', 0, -1):
         price = price + '0'
     return price
 
