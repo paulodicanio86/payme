@@ -31,6 +31,7 @@ class AmountField(StringField):
             self.data = convert_price(valuelist[0])
         else:
             self.data = []
+            
 
 
 class GeneratorForm(Form):

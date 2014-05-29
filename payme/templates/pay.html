@@ -66,7 +66,7 @@
 	    {% else %}
 	    <label for="email_receiver_id" class="col-lg-5 col-xs-12 control-label">Receiver's E-Mail</label>
             <div class="col-lg-5 col-xs-12 input-group">
-	      <input type="text" class="form-control" id="email_receiver_id"
+	      <input type="email" class="form-control" id="email_receiver_id"
 	      name="email_receiver" 
 	      value="{{ email_receiver.value }}" {% if email_receiver.read_only %}readonly{% endif %}>
 	      <input type="hidden" name="read_only_email_receiver" {% if email_receiver.read_only %}value="True"{% else %}value="False"{% endif %}>
@@ -89,7 +89,7 @@
 	    {% else %}
 	    <label for="account_number_id" class="col-lg-5 col-xs-12 control-label">Receiver's Account No.</label>
             <div class="col-lg-5 col-xs-12 input-group">
-	      <input type="text" class="form-control" id="account_number_id"
+	      <input type="tel" class="form-control" id="account_number_id"
 	      name="account_number" placeholder="12345678" maxlength="8" 
 	      value="{{ account_number.value }}" {% if account_number.read_only %}readonly{% endif %}>
 	      <input type="hidden" name="read_only_account_number" {% if account_number.read_only %}value="True"{% else %}value="False"{% endif %}>
