@@ -33,7 +33,6 @@ class AmountField(StringField):
             self.data = []
             
 
-
 class GeneratorForm(Form):
     name_receiver = StringField('Your Name', validators=[InputRequired(), Length(max=18)])
     account_number = StringField('Your Account No.', validators=[InputRequired(), Account_Number()])
