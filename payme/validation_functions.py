@@ -116,6 +116,8 @@ def convert_price(price):
     """
     Convert ','->'' and decimal fixes
     """
+    if price == 'empty':
+        return price
     if price == '':
         return price
     # if a comma is given as decimal separator replace this with a '.'
