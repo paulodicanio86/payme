@@ -5446,13 +5446,13 @@ a.list-group-item:focus {
 }
 
 .panel-primary {
-  border-color: #428bca;
+  border-color: #003688;
 }
 
 .panel-primary > .panel-heading {
   color: #ffffff;
-  background-color: #428bca;
-  border-color: #428bca;
+  background-color: #003688;
+  border-color: #003688;
 }
 
 .panel-primary > .panel-heading + .panel-collapse .panel-body {
