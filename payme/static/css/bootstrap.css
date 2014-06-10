@@ -324,13 +324,13 @@ textarea {
 }
 
 a {
-  color: #428bca;
+  color: #003688;
   text-decoration: none;
 }
 
 a:hover,
 a:focus {
-  color: #2a6496;
+  color: #003688;
   text-decoration: underline;
 }
 
@@ -435,7 +435,7 @@ cite {
 }
 
 .text-info {
-  color: #3a87ad;
+  color: #003688;
 }
 
 .text-left {
@@ -2244,7 +2244,7 @@ fieldset[disabled] .btn-success.active {
 
 .btn-info {
   color: #ffffff;
-  background-color: #5bc0de;
+  background-color: #003688;
   border-color: #46b8da;
 }
 
@@ -3921,7 +3921,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
   color: #ffffff;
-  background-color: #428bca;
+  background-color: #003688;
 }
 
 .nav-stacked > li {
@@ -4908,7 +4908,7 @@ a.badge:focus {
 
 a.list-group-item.active > .badge,
 .nav-pills > .active > a > .badge {
-  color: #428bca;
+  color: #003688;
   background-color: #ffffff;
 }
 
@@ -5518,21 +5518,21 @@ a.list-group-item:focus {
 }
 
 .panel-info {
-  border-color: #bce8f1;
+  border-color: #003688;
 }
 
 .panel-info > .panel-heading {
-  color: #3a87ad;
-  background-color: #d9edf7;
-  border-color: #bce8f1;
+  color: #FFFFFF;
+  background-color: #003688;
+  border-color: #003688;
 }
 
 .panel-info > .panel-heading + .panel-collapse .panel-body {
-  border-top-color: #bce8f1;
+  border-top-color: #003688;
 }
 
 .panel-info > .panel-footer + .panel-collapse .panel-body {
-  border-bottom-color: #bce8f1;
+  border-bottom-color:#003688;
 }
 
 .well {
