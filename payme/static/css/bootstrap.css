@@ -748,8 +748,8 @@ pre code {
 .container {
   padding-right: 15px;
   padding-left: 15px;
-  margin-right: auto;
   margin-left: auto;
+  margin-right: auto;
 }
 
 .container:before,
@@ -916,6 +916,7 @@ pre code {
 @media (min-width: 768px) {
   .container {
     max-width: 750px;
+    margin-left: 30em;
   }
   .col-sm-1,
   .col-sm-2,
@@ -4918,6 +4919,7 @@ a.list-group-item.active > .badge,
 
 .jumbotron {
   padding: 30px;
+  margin-top: 20px;
   margin-bottom: 30px;
   font-size: 21px;
   font-weight: 200;
@@ -4936,17 +4938,19 @@ a.list-group-item.active > .badge,
 }
 
 .container .jumbotron {
-  border-radius: 6px;
+  border-radius: 0px;
 }
 
 @media screen and (min-width: 768px) {
   .jumbotron {
+    margin-top: 0px;
     padding-top: 48px;
     padding-bottom: 48px;
   }
   .container .jumbotron {
     padding-right: 60px;
     padding-left: 60px;
+    border-radius: 6px;
   }
   .jumbotron h1 {
     font-size: 63px;

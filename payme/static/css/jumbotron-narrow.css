@@ -74,6 +74,6 @@ body {
   }
   /* Remove the bottom border on the jumbotron for visual effect */
   .jumbotron {
-    border-bottom: 0;
+    border-bottom: 1;
   }
 }

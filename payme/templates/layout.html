@@ -40,7 +40,7 @@
     <div class="container">
       <div class="header row">
 	<div class="col-lg-6 col-xs-6">
-	<h3 class="text-info">{{ company }}</h3>
+	  <h3 class="text-info">{{ company }}</h3>
 	</div>
 	<div class="col-lg-6 col-xs-12">
 	  <ul class="nav nav-pills pull-right">
@@ -50,21 +50,22 @@
 	  </ul>
         </div>
       </div>
-      {% block content %}{% endblock %}
 
+      {% block content %}{% endblock %}
+    
       <div class="clearfix visible-lg visible-xs"><p>&nbsp;</p></div>
-      
+ 
       <div class="footer row">
 	{% block footer %}
 	<div class="col-lg-4 col-xs-12">
-	<p align="left">
-	<img src="{{ url_for('static', filename='logos/amex.png') }}" alt="Amex" title="Amex"height="30px" width="49px"/>
-	<img src="{{ url_for('static', filename='logos/mastercard.png') }}" alt="MasterCard" title="MasterCard"height="30px" width="49px"/>
-	<img src="{{ url_for('static', filename='logos/visa.png') }}" alt="Visa" title="Visa"height="30px" width="49px"/>
-	</p>
+	  <p align="left">
+	  <img src="{{ url_for('static', filename='logos/amex.png') }}" alt="Amex" title="Amex"height="30px" width="49px"/>
+	  <img src="{{ url_for('static', filename='logos/mastercard.png') }}" alt="MasterCard" title="MasterCard"height="30px" width="49px"/>
+	  <img src="{{ url_for('static', filename='logos/visa.png') }}" alt="Visa" title="Visa"height="30px" width="49px"/>
+	  </p>
 	</div>
 	<div class="col-lg-4 col-lg-offset-4 col-xs-12">
-	<p align="right">&copy; {{ company }} 2014</p>
+	  <p align="right">&copy; {{ company }} 2014</p>
 	</div>
 	{% endblock %}
       </div>
