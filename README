@@ -1,37 +1,4 @@
-WELCOME!
+Payme app using Flask and CSS package Bootstrap 3.0.0.
 
-CSS package:
-Bootstrap 3.0.0
+Designed to run on Heroku or similar.
 
-
-For first time initialisation of virtual env:
-'source initial_setup.sh'
-
-
-To setup virtual environment ('venv') and install all packages in requirements file through pip freshly:
-'source setup_venv.sh'
-
-
-To activate virtual env
-'source venv/bin/activate'
-
-
-To get a list of installed packages by pip in virtual env:
-'pip freeze'
-
-
-To install packages when in virtual env, e.g.:
-'pip install flask'
-'sudo pip install --index-url https://code.stripe.com --upgrade stripe'
-
-
-To update all packages to what is written in the requirements file:
-'pip install --upgrade -r requirements.txt'
-
-
-To update a certain [package]:
-'pip install --upgrade [package]'
-
-
-To show all outdated packages:
-'pip list -o'  ('pip list --outdated')
